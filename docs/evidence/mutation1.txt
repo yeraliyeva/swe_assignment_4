@@ -1,5 +1,5 @@
-✖ AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed (0.619781ms)
-ℹ pass 24
+✖ AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed (0.744911ms)
+ℹ pass 26
 ℹ fail 1
 ✖ failing tests:
-✖ AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed (0.619781ms)
+✖ AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed (0.744911ms)

@@ -16,6 +16,12 @@ test("AC1: rejects end before start", () => {
 test("AC1: rejects start before fixed current time (09:00)", () => {
   assert.equal(checkAvailability(R301, slot("08:00", "08:30"), NOW).reason, "past");
 });
+test("AC1 boundary: start exactly at current time (09:00) is rejected", () => {
+  assert.equal(checkAvailability(R301, slot("09:00", "09:30"), NOW).reason, "past");
+});
+test("AC1 boundary: start one minute after now (09:01) is accepted", () => {
+  assert.equal(checkAvailability(R301, slot("09:01", "09:30"), NOW).ok, true);
+});
 test("AC2 boundary: exactly 120 minutes is allowed", () => {
   assert.equal(checkAvailability(R301, slot("15:00", "17:00"), NOW).ok, true);
 });

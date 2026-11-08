@@ -6,19 +6,19 @@ export const MAX_MINUTES = 120;
 export const MESSAGES = Object.freeze({
   invalidTime: "Please enter a valid start and end time.",
   endBeforeStart: "End time must be after start time.",
-  past: "Start time cannot be in the past.",
+  past: "Start time must be strictly after the current time.",
   tooLong: `Bookings cannot be longer than ${MAX_MINUTES} minutes.`,
   noRoom: "Please select a room first."
 });
 
-/** AC1 + AC2: validate the requested slot independently of any room. */
+/** AC1 + AC2 (Assignment #03 wording): start strictly after now, end after start, max 120 min. */
 export function validateSlot({ date, start, end }, now) {
   if (!isValidHHMM(start) || !isValidHHMM(end)) return { ok: false, reason: "invalid", message: MESSAGES.invalidTime };
   const s = toMillis(date, start);
   const e = toMillis(date, end);
   if (Number.isNaN(s) || Number.isNaN(e)) return { ok: false, reason: "invalid", message: MESSAGES.invalidTime };
   if (e <= s) return { ok: false, reason: "order", message: MESSAGES.endBeforeStart };
-  if (s < new Date(now).getTime()) return { ok: false, reason: "past", message: MESSAGES.past };
+  if (s <= new Date(now).getTime()) return { ok: false, reason: "past", message: MESSAGES.past }; // strictly after now
   if (minutesBetween(s, e) > MAX_MINUTES) return { ok: false, reason: "duration", message: MESSAGES.tooLong };
   return { ok: true, startMs: s, endMs: e };
 }

@@ -1,16 +1,40 @@
-✔ AC1: rejects end before start (0.80313ms)
-✔ AC1: rejects start in the past (before fixed now 09:00) (0.089563ms)
-✔ AC2: exactly 120 minutes is allowed (0.101588ms)
-✔ AC2: 121 minutes is rejected (0.066285ms)
-✔ AC3: blocked room is never available (0.068814ms)
-✔ AC4: touching interval (11:00-12:00 after 10:00-11:00) is allowed (0.060961ms)
-✔ AC4: overlapping interval (10:30-11:30) is rejected (0.096111ms)
-✔ AC5: checking availability does not mutate booking data (0.188559ms)
-ℹ tests 8
+✔ AC1: rejects end before start (0.915905ms)
+✔ AC1: rejects start in the past (before fixed now 09:00) (0.140451ms)
+✖ AC1 (A3 wording): start exactly at now 09:00 is rejected (0.622197ms)
+✔ AC2: exactly 120 minutes is allowed (0.160265ms)
+✔ AC2: 121 minutes is rejected (0.090436ms)
+✔ AC3: blocked room is never available (0.090489ms)
+✔ AC4: touching interval (11:00-12:00 after 10:00-11:00) is allowed (0.821645ms)
+✔ AC4: overlapping interval (10:30-11:30) is rejected (0.10644ms)
+✔ AC5: checking availability does not mutate booking data (0.278565ms)
+ℹ tests 9
 ℹ suites 0
 ℹ pass 8
-ℹ fail 0
+ℹ fail 1
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 47.269087
+ℹ duration_ms 53.288244
+
+✖ failing tests:
+
+test at baseline/tests/baseline.test.js:16:1
+✖ AC1 (A3 wording): start exactly at now 09:00 is rejected (0.622197ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (/home/claude/smart-campus/baseline/tests/baseline.test.js:17:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -13,6 +13,10 @@ test("AC1: rejects start in the past (before fixed now 09:00)", () => {
   assert.equal(checkAvailability(D, "08:00", "08:30").ok, false);
 });
 
+test("AC1 (A3 wording): start exactly at now 09:00 is rejected", () => {
+  assert.equal(checkAvailability(D, "09:00", "09:30").ok, false);
+});
+
 test("AC2: exactly 120 minutes is allowed", () => {
   assert.equal(checkAvailability(D, "15:00", "17:00").ok, true);
 });
