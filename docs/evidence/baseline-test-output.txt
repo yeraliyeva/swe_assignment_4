@@ -1,0 +1,16 @@
+✔ AC1: rejects end before start (0.80313ms)
+✔ AC1: rejects start in the past (before fixed now 09:00) (0.089563ms)
+✔ AC2: exactly 120 minutes is allowed (0.101588ms)
+✔ AC2: 121 minutes is rejected (0.066285ms)
+✔ AC3: blocked room is never available (0.068814ms)
+✔ AC4: touching interval (11:00-12:00 after 10:00-11:00) is allowed (0.060961ms)
+✔ AC4: overlapping interval (10:30-11:30) is rejected (0.096111ms)
+✔ AC5: checking availability does not mutate booking data (0.188559ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47.269087

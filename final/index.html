@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Campus Room Checker</title>
+<link rel="stylesheet" href="src/ui/styles.css">
+</head>
+<body>
+<main>
+  <h1>Smart Campus Room Checker</h1>
+  <p class="now">Current time (fixed): 10 Nov 2026, 09:00</p>
+  <form id="form" novalidate>
+    <fieldset>
+      <legend>1. Requirements</legend>
+      <label>Attendees <input id="attendees" type="number" min="1" inputmode="numeric" placeholder="e.g. 20"></label>
+      <div class="equipment">
+        <label><input type="checkbox" name="equipment" value="projector"> Projector</label>
+        <label><input type="checkbox" name="equipment" value="whiteboard"> Whiteboard</label>
+        <label><input type="checkbox" name="equipment" value="video-conf"> Video conferencing</label>
+        <label><input type="checkbox" name="equipment" value="computers"> Computers</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>2. Choose a room</legend>
+      <ul id="rooms" class="rooms"></ul>
+      <p id="empty" class="empty" hidden>No rooms match these requirements. Try fewer attendees or less equipment.</p>
+    </fieldset>
+    <fieldset>
+      <legend>3. Time slot</legend>
+      <div class="row">
+        <label>Date <input id="date" type="date" value="2026-11-10"></label>
+        <label>Start <input id="start" type="time"></label>
+        <label>End <input id="end" type="time"></label>
+      </div>
+    </fieldset>
+    <button type="submit">Check availability</button>
+  </form>
+  <div id="result" class="result" role="status" aria-live="polite"></div>
+</main>
+<script type="module">
+  import { mountApp } from "./src/ui/app.js";
+  mountApp(document);
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+✖ F1 boundary: exact capacity (12) keeps Seminar Room 105 (7.928931ms)
+✖ F1: empty attendees means no capacity restriction (0.528013ms)
+✖ F2: room must contain ALL selected equipment (projector + computers -> LAB2 only) (1.041323ms)
+✖ F2: one missing item excludes the room (whiteboard + video-conf -> R105 only) (0.371293ms)
+✖ UI: successful availability check shows green 'available' feedback (44.930247ms)

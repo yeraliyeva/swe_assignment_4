@@ -1,0 +1,37 @@
+
+> smart-campus-room-checker@2.0.0 test
+> node --test --test-reporter=spec final/tests/*.test.js
+
+✔ AC1: rejects malformed time (1.562192ms)
+✔ AC1: rejects end before start (0.276426ms)
+✔ AC1: rejects start before fixed current time (09:00) (0.077566ms)
+✔ AC2 boundary: exactly 120 minutes is allowed (0.09723ms)
+✔ AC2 boundary: 121 minutes is rejected (0.070816ms)
+✔ AC3/F3: blocked room is never reported available, even with a free slot (0.080309ms)
+✔ AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed (0.059021ms)
+✔ AC4 boundary: overlapping interval 10:59–11:30 is rejected (0.058364ms)
+✔ AC4: interval fully containing a booking is rejected (0.21555ms)
+✔ AC5: booking data is immutable (frozen) and unchanged after checks (0.447779ms)
+✔ Room-specific data: same slot is busy in R301 but free in R210 (0.103455ms)
+✔ No room selected gives a clear message instead of a crash (0.047375ms)
+✔ Catalog has at least four rooms with id, name, capacity, equipment, blocked, bookings (1.280383ms)
+✔ F1 boundary: exact capacity (12) keeps Seminar Room 105 (0.448635ms)
+✔ F1 boundary: insufficient capacity (13) removes Seminar Room 105 (1.560365ms)
+✔ F1: empty attendees means no capacity restriction (0.118358ms)
+✔ F2: room must contain ALL selected equipment (projector + computers -> LAB2 only) (0.542921ms)
+✔ F2: one missing item excludes the room (whiteboard + video-conf -> R105 only) (0.107335ms)
+✔ F1+F2 combined: 25 attendees + projector -> R301, AUD1 (blocked shown, flagged) (0.090493ms)
+✔ F4 (logic): impossible requirements return an empty list (0.057142ms)
+✔ UI: successful availability check shows green 'available' feedback (62.566138ms)
+✔ F5 (UI): switching room refreshes result using the new room's bookings (24.189547ms)
+✔ F4 (UI): clear empty state when no rooms match; selection and result cleared (15.332797ms)
+✔ F1/F2 (UI): filters update the visible room list (11.144669ms)
+✔ AC6 (UI): invalid slot gives clear error text; layout has responsive viewport (15.105089ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 484.173971
