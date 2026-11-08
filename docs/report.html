@@ -386,6 +386,7 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
 </section>
 
 
+
 <!-- APPENDIX START --><section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">A. README.md</div><pre class="code">  1  # Smart Campus Room Availability Checker — Assignment #04
   2  
   3  Author: Yeraliyeva Anel (24B031020) · Software Engineering, KBTU · Practice: Tues
@@ -398,77 +399,79 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
   7  Fictional data only. No login, payments, live APIs or database. Fixed current tim
    ↳ e: **2026-11-10 09:00**.
   8  
-  9  ## Layout
+  9  **Live demo:** https://claude.ai/artifact/FrjuW8bPsPiKPbPwGoD6WU
  10  
- 11  ```
- 12  baseline/               original single-room prototype (initial version)
- 13    index.html, app.js    data + rules + DOM in one file
- 14    tests/baseline.test.js  AC1–AC5 regression checks on the original
- 15  final/                  refactored multi-room version (final version)
- 16    index.html
- 17    src/data/rooms.js        room catalog (5 rooms, deep-frozen) + fixed NOW
- 18    src/domain/time.js       time parsing + overlap rule (single source of truth)
- 19    src/domain/availability.js  AC1–AC4 rules for ONE room (pure)
- 20    src/domain/filters.js    F1–F3 filtering (pure)
- 21    src/ui/render.js         DOM rendering only
- 22    src/ui/app.js            controller: wires form events to domain + render
- 23    tests/                   availability, filters, ui (jsdom) suites
- 24  docs/evidence/          saved test outputs and mutation-check results
- 25  ```
- 26  
- 27  ## Setup
+ 11  ## Layout
+ 12  
+ 13  ```
+ 14  baseline/               original single-room prototype (initial version)
+ 15    index.html, app.js    data + rules + DOM in one file
+ 16    tests/baseline.test.js  AC1–AC5 regression checks on the original
+ 17  final/                  refactored multi-room version (final version)
+ 18    index.html
+ 19    src/data/rooms.js        room catalog (5 rooms, deep-frozen) + fixed NOW
+ 20    src/domain/time.js       time parsing + overlap rule (single source of truth)
+ 21    src/domain/availability.js  AC1–AC4 rules for ONE room (pure)
+ 22    src/domain/filters.js    F1–F3 filtering (pure)
+ 23    src/ui/render.js         DOM rendering only
+ 24    src/ui/app.js            controller: wires form events to domain + render
+ 25    tests/                   availability, filters, ui (jsdom) suites
+ 26  docs/evidence/          saved test outputs and mutation-check results
+ 27  ```
  28  
- 29  Requires Node.js 18+ (tested with v22) and Python 3 (only for the static server).
+ 29  ## Setup
  30  
- 31  ```bash
- 32  npm install            # installs jsdom (dev dependency for the UI test)
- 33  ```
- 34  </pre></div><div><div class="ct">A. README.md (cont.)</div><pre class="code"> 35  ## Run
+ 31  Requires Node.js 18+ (tested with v22) and Python 3 (only for the static server).
+ 32  
+ 33  ```bash
+ 34  npm install            # installs jsdom (dev dependency for the UI test)</pre></div><div><div class="ct">A. README.md (cont.)</div><pre class="code"> 35  ```
  36  
- 37  ES modules need to be served over HTTP (not file://):
+ 37  ## Run
  38  
- 39  ```bash
- 40  npm start              # python3 -m http.server 8080
- 41  # open http://localhost:8080/final/      (refactored version)
- 42  # open http://localhost:8080/baseline/   (original version)
- 43  ```
- 44  
- 45  ## Test
+ 39  ES modules need to be served over HTTP (not file://):
+ 40  
+ 41  ```bash
+ 42  npm start              # python3 -m http.server 8080
+ 43  # open http://localhost:8080/final/      (refactored version)
+ 44  # open http://localhost:8080/baseline/   (original version)
+ 45  ```
  46  
- 47  ```bash
- 48  npm run test:baseline  # 9 AC regression tests against the original prototype (8 
+ 47  ## Test
+ 48  
+ 49  ```bash
+ 50  npm run test:baseline  # 9 AC regression tests against the original prototype (8 
    ↳ pass)
- 49  npm test               # 27 tests against the final version (AC1–AC6, F1–F5, UI i
+ 51  npm test               # 27 tests against the final version (AC1–AC6, F1–F5, UI i
    ↳ ntegration)
- 50  ```
- 51  
- 52  Results recorded on 2026-11-08: baseline **8/9 passed** (the reconstructed baseli
+ 52  ```
+ 53  
+ 54  Results recorded on 2026-11-08: baseline **8/9 passed** (the reconstructed baseli
    ↳ ne accepts a start exactly at &quot;now&quot;, which Assignment #03 AC1 forbids), final **2
    ↳ 7/27 passed**
- 53  (full output in `docs/evidence/`).
- 54  
- 55  ## Git history
+ 55  (full output in `docs/evidence/`).
  56  
- 57  ```bash
- 58  git log --oneline      # baseline commit first, final refactor after it
- 59  ```
- 60  
- 61  ## Acceptance criteria
+ 57  ## Git history
+ 58  
+ 59  ```bash
+ 60  git log --oneline      # baseline commit first, final refactor after it
+ 61  ```
  62  
- 63  | ID | Rule |
- 64  |----|------|
- 65  | AC1 | Valid HH:MM times, end after start, start strictly after the fixed curren
-   ↳ t time |
- 66  | AC2 | Maximum 120 minutes (120 allowed, 121 rejected) |
- 67  | AC3 | Blocked room cannot be booked |</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>17</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">A. README.md (cont.)</div><pre class="code"> 68  | AC4 | Half-open intervals: touching bookings allowed, overlapping rejected |
- 69  | AC5 | Booking data is never mutated (catalog is deep-frozen) |
- 70  | AC6 | Clear, responsive feedback (status region, mobile viewport) |
- 71  | F1 | Capacity ≥ attendees |
- 72  | F2 | Room has ALL selected equipment |
- 73  | F3 | Blocked room never reported available (shown with BLOCKED label) |
- 74  | F4 | Clear empty state when no rooms match |
- 75  | F5 | Changing the selected room refreshes the result with that room&#x27;s bookings 
+ 63  ## Acceptance criteria
+ 64  
+ 65  | ID | Rule |
+ 66  |----|------|
+ 67  | AC1 | Valid HH:MM times, end after start, start strictly after the fixed curren
+   ↳ t time |</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>17</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">A. README.md (cont.)</div><pre class="code"> 68  | AC2 | Maximum 120 minutes (120 allowed, 121 rejected) |
+ 69  | AC3 | Blocked room cannot be booked |
+ 70  | AC4 | Half-open intervals: touching bookings allowed, overlapping rejected |
+ 71  | AC5 | Booking data is never mutated (catalog is deep-frozen) |
+ 72  | AC6 | Clear, responsive feedback (status region, mobile viewport) |
+ 73  | F1 | Capacity ≥ attendees |
+ 74  | F2 | Room has ALL selected equipment |
+ 75  | F3 | Blocked room never reported available (shown with BLOCKED label) |
+ 76  | F4 | Clear empty state when no rooms match |
+ 77  | F5 | Changing the selected room refreshes the result with that room&#x27;s bookings 
    ↳ |</pre><div class="ct">A. package.json</div><pre class="code">  1  {
   2    &quot;name&quot;: &quot;smart-campus-room-checker&quot;,
   3    &quot;version&quot;: &quot;2.0.0&quot;,
@@ -490,9 +493,9 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
   6  var room = {
   7    name: &quot;Room 301&quot;,
   8    blocked: false,
-  9    bookings: [
- 10      { start: &quot;2026-11-10T10:00&quot;, end: &quot;2026-11-10T11:00&quot;, title: &quot;Algorithms lect
-   ↳ ure&quot; },</pre></div><div><div class="ct">B. Initial version — baseline/app.js (cont.)</div><pre class="code"> 11      { start: &quot;2026-11-10T13:00&quot;, end: &quot;2026-11-10T14:30&quot;, title: &quot;Club meeting&quot; }
+  9    bookings: [</pre></div><div><div class="ct">B. Initial version — baseline/app.js (cont.)</div><pre class="code"> 10      { start: &quot;2026-11-10T10:00&quot;, end: &quot;2026-11-10T11:00&quot;, title: &quot;Algorithms lect
+   ↳ ure&quot; },
+ 11      { start: &quot;2026-11-10T13:00&quot;, end: &quot;2026-11-10T14:30&quot;, title: &quot;Club meeting&quot; }
  12    ]
  13  };
  14  
@@ -527,10 +530,10 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  43      var bs = new Date(b.start).getTime();
  44      var be = new Date(b.end).getTime();
  45      if (s &lt; be &amp;&amp; bs &lt; e) {
- 46        return { ok: false, message: &quot;Conflicts with \&quot;&quot; + b.title + &quot;\&quot;.&quot; };
- 47      }
- 48    }</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>18</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">B. Initial version — baseline/app.js (cont.)</div><pre class="code"> 49    return { ok: true, message: r.name + &quot; is available.&quot; };
+ 46        return { ok: false, message: &quot;Conflicts with \&quot;&quot; + b.title + &quot;\&quot;.&quot; };</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>18</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">B. Initial version — baseline/app.js (cont.)</div><pre class="code"> 47      }
+ 48    }
+ 49    return { ok: true, message: r.name + &quot; is available.&quot; };
  50  }
  51  
  52  // ---------- UI (duplicated validation + rendering in two handlers) ----------
@@ -565,9 +568,9 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  81          out.className = &quot;result&quot;;
  82          out.textContent = &quot;&quot;;
  83          return;
- 84        }
- 85        var res = checkAvailability(d, st, en);
- 86        out.className = res.ok ? &quot;result ok&quot; : &quot;result error&quot;;</pre></div><div><div class="ct">B. Initial version — baseline/app.js (cont.)</div><pre class="code"> 87        out.textContent = res.message;
+ 84        }</pre></div><div><div class="ct">B. Initial version — baseline/app.js (cont.)</div><pre class="code"> 85        var res = checkAvailability(d, st, en);
+ 86        out.className = res.ok ? &quot;result ok&quot; : &quot;result error&quot;;
+ 87        out.textContent = res.message;
  88      });
  89    });
  90  }
@@ -599,10 +602,10 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  20    &lt;form id=&quot;form&quot;&gt;
  21      &lt;label&gt;Date &lt;input id=&quot;date&quot; type=&quot;date&quot; value=&quot;2026-11-10&quot;&gt;&lt;/label&gt;
  22      &lt;label&gt;Start &lt;input id=&quot;start&quot; type=&quot;time&quot;&gt;&lt;/label&gt;
- 23      &lt;label&gt;End &lt;input id=&quot;end&quot; type=&quot;time&quot;&gt;&lt;/label&gt;
- 24      &lt;button type=&quot;submit&quot;&gt;Check availability&lt;/button&gt;
- 25    &lt;/form&gt;</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>19</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">B. Initial version — baseline/index.html (cont.)</div><pre class="code"> 26    &lt;div id=&quot;result&quot; class=&quot;result&quot; role=&quot;status&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
+ 23      &lt;label&gt;End &lt;input id=&quot;end&quot; type=&quot;time&quot;&gt;&lt;/label&gt;</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>19</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">B. Initial version — baseline/index.html (cont.)</div><pre class="code"> 24      &lt;button type=&quot;submit&quot;&gt;Check availability&lt;/button&gt;
+ 25    &lt;/form&gt;
+ 26    &lt;div id=&quot;result&quot; class=&quot;result&quot; role=&quot;status&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
  27    &lt;script src=&quot;app.js&quot;&gt;&lt;/script&gt;
  28  &lt;/body&gt;
  29  &lt;/html&gt;</pre><div class="ct">B. Initial version — baseline/tests/baseline.test.js</div><pre class="code">  1  // Baseline regression suite: AC1–AC5 run against the ORIGINAL single-room protot
@@ -634,9 +637,9 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  26  });
  27  
  28  test(&quot;AC3: blocked room is never available&quot;, () =&gt; {
- 29    const blocked = { ...room, blocked: true };
- 30    assert.equal(checkAvailability(D, &quot;15:00&quot;, &quot;16:00&quot;, blocked).ok, false);
- 31  });</pre></div><div><div class="ct">B. Initial version — baseline/tests/baseline.test.js (cont.)</div><pre class="code"> 32  
+ 29    const blocked = { ...room, blocked: true };</pre></div><div><div class="ct">B. Initial version — baseline/tests/baseline.test.js (cont.)</div><pre class="code"> 30    assert.equal(checkAvailability(D, &quot;15:00&quot;, &quot;16:00&quot;, blocked).ok, false);
+ 31  });
+ 32  
  33  test(&quot;AC4: touching interval (11:00-12:00 after 10:00-11:00) is allowed&quot;, () =&gt; {
  34    assert.equal(checkAvailability(D, &quot;11:00&quot;, &quot;12:00&quot;).ok, true);
  35  });
@@ -668,10 +671,10 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  13      id: &quot;R301&quot;, name: &quot;Room 301&quot;, capacity: 30, blocked: false,
  14      equipment: [&quot;projector&quot;, &quot;whiteboard&quot;],
  15      bookings: [
- 16        { start: &quot;2026-11-10T10:00&quot;, end: &quot;2026-11-10T11:00&quot;, title: &quot;Algorithms le
-   ↳ cture&quot; },
- 17        { start: &quot;2026-11-10T13:00&quot;, end: &quot;2026-11-10T14:30&quot;, title: &quot;Club meeting&quot;</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>20</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">C. Final version — final/src/data/rooms.js (cont.)</div><pre class="code">   ↳  }
+ 16        { start: &quot;2026-11-10T10:00&quot;, end: &quot;2026-11-10T11:00&quot;, title: &quot;Algorithms le</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>20</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">C. Final version — final/src/data/rooms.js (cont.)</div><pre class="code">   ↳ cture&quot; },
+ 17        { start: &quot;2026-11-10T13:00&quot;, end: &quot;2026-11-10T14:30&quot;, title: &quot;Club meeting&quot;
+   ↳  }
  18      ]
  19    },
  20    {
@@ -702,10 +705,11 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  43    }
  44  ]);
  45  
- 46  export const findRoom = (rooms, id) =&gt; rooms.find((r) =&gt; r.id === id) || null;</pre><div class="ct">C. Final version — final/src/domain/time.js</div><pre class="code">  1  // Single source of truth for time parsing (previously duplicated in 3 places).
+ 46  export const findRoom = (rooms, id) =&gt; rooms.find((r) =&gt; r.id === id) || null;</pre></div><div><div class="ct">C. Final version — final/src/domain/time.js</div><pre class="code">  1  // Single source of truth for time parsing (previously duplicated in 3 places).
   2  const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
   3  
-  4  export const isValidHHMM = (value) =&gt; typeof value === &quot;string&quot; &amp;&amp; HHMM.test(valu</pre></div><div><div class="ct">C. Final version — final/src/domain/time.js (cont.)</div><pre class="code">   ↳ e);
+  4  export const isValidHHMM = (value) =&gt; typeof value === &quot;string&quot; &amp;&amp; HHMM.test(valu
+   ↳ e);
   5  
   6  /** Returns epoch ms for &quot;YYYY-MM-DD&quot; + &quot;HH:MM&quot;, or NaN. */
   7  export const toMillis = (date, hhmm) =&gt; new Date(`${date}T${hhmm}`).getTime();
@@ -735,12 +739,12 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  16    if (!isValidHHMM(start) || !isValidHHMM(end)) return { ok: false, reason: &quot;inva
    ↳ lid&quot;, message: MESSAGES.invalidTime };
  17    const s = toMillis(date, start);
- 18    const e = toMillis(date, end);
- 19    if (Number.isNaN(s) || Number.isNaN(e)) return { ok: false, reason: &quot;invalid&quot;, 
+ 18    const e = toMillis(date, end);</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>21</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">C. Final version — final/src/domain/availability.js (cont.)</div><pre class="code"> 19    if (Number.isNaN(s) || Number.isNaN(e)) return { ok: false, reason: &quot;invalid&quot;, 
    ↳ message: MESSAGES.invalidTime };
  20    if (e &lt;= s) return { ok: false, reason: &quot;order&quot;, message: MESSAGES.endBeforeSta
-   ↳ rt };</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>21</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">C. Final version — final/src/domain/availability.js (cont.)</div><pre class="code"> 21    if (s &lt;= new Date(now).getTime()) return { ok: false, reason: &quot;past&quot;, message: 
+   ↳ rt };
+ 21    if (s &lt;= new Date(now).getTime()) return { ok: false, reason: &quot;past&quot;, message: 
    ↳ MESSAGES.past }; // strictly after now
  22    if (minutesBetween(s, e) &gt; MAX_MINUTES) return { ok: false, reason: &quot;duration&quot;,
    ↳  message: MESSAGES.tooLong };
@@ -770,11 +774,11 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
   5    const n = Number(attendees);
   6    return !Number.isFinite(n) || n &lt;= 0 || room.capacity &gt;= n;
   7  };
-  8  
-  9  /** F2: room must contain ALL required items. */
+  8  </pre></div><div><div class="ct">C. Final version — final/src/domain/filters.js (cont.)</div><pre class="code">  9  /** F2: room must contain ALL required items. */
  10  export const hasAllEquipment = (room, required = []) =&gt; required.every((item) =&gt; 
    ↳ room.equipment.includes(item));
- 11  </pre></div><div><div class="ct">C. Final version — final/src/domain/filters.js (cont.)</div><pre class="code"> 12  /**
+ 11  
+ 12  /**
  13   * Rooms matching the user&#x27;s requirements. Blocked rooms stay in the list but are
  14   * flagged (F3: they can never be reported as available — see checkAvailability).
  15   */
@@ -804,12 +808,12 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  19      label.append(radio, info);
  20      li.append(label);
  21      listEl.append(li);
- 22    }
- 23  }
+ 22    }</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>22</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">C. Final version — final/src/ui/render.js (cont.)</div><pre class="code"> 23  }
  24  
  25  export function renderEmptyState(emptyEl, isEmpty) {
- 26    emptyEl.hidden = !isEmpty;</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>22</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">C. Final version — final/src/ui/render.js (cont.)</div><pre class="code"> 27  }
+ 26    emptyEl.hidden = !isEmpty;
+ 27  }
  28  
  29  export function renderResult(resultEl, result) {
  30    if (!result) {
@@ -839,11 +843,11 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
    ↳ c) =&gt; c.value)
  15    });
  16    const readSlot = () =&gt; ({ date: $(&quot;date&quot;).value, start: $(&quot;start&quot;).value, end: 
-   ↳ $(&quot;end&quot;).value });
- 17  
+   ↳ $(&quot;end&quot;).value });</pre></div><div><div class="ct">C. Final version — final/src/ui/app.js (cont.)</div><pre class="code"> 17  
  18    function refresh() {
  19      const visible = filterRooms(rooms, readCriteria());
- 20      // selected room filtered out -&gt; drop selection so we never show a stale resu</pre></div><div><div class="ct">C. Final version — final/src/ui/app.js (cont.)</div><pre class="code">   ↳ lt
+ 20      // selected room filtered out -&gt; drop selection so we never show a stale resu
+   ↳ lt
  21      if (!visible.some((r) =&gt; r.id === state.selectedId)) state.selectedId = null;
  22      renderRoomList(list, visible, state.selectedId);
  23      renderEmptyState(empty, visible.length === 0);
@@ -873,12 +877,12 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
   2  &lt;html lang=&quot;en&quot;&gt;
   3  &lt;head&gt;
   4  &lt;meta charset=&quot;utf-8&quot;&gt;
-  5  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
-  6  &lt;title&gt;Smart Campus Room Checker&lt;/title&gt;
+  5  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>23</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">C. Final version — final/index.html (cont.)</div><pre class="code">  6  &lt;title&gt;Smart Campus Room Checker&lt;/title&gt;
   7  &lt;link rel=&quot;stylesheet&quot; href=&quot;src/ui/styles.css&quot;&gt;
   8  &lt;/head&gt;
-  9  &lt;body&gt;</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>23</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">C. Final version — final/index.html (cont.)</div><pre class="code"> 10  &lt;main&gt;
+  9  &lt;body&gt;
+ 10  &lt;main&gt;
  11    &lt;h1&gt;Smart Campus Room Checker&lt;/h1&gt;
  12    &lt;p class=&quot;now&quot;&gt;Current time (fixed): 10 Nov 2026, 09:00&lt;/p&gt;
  13    &lt;form id=&quot;form&quot; novalidate&gt;
@@ -911,45 +915,76 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  34          &lt;label&gt;End &lt;input id=&quot;end&quot; type=&quot;time&quot;&gt;&lt;/label&gt;
  35        &lt;/div&gt;
  36      &lt;/fieldset&gt;
- 37      &lt;button type=&quot;submit&quot;&gt;Check availability&lt;/button&gt;
- 38    &lt;/form&gt;
+ 37      &lt;button type=&quot;submit&quot;&gt;Check availability&lt;/button&gt;</pre></div><div><div class="ct">C. Final version — final/index.html (cont.)</div><pre class="code"> 38    &lt;/form&gt;
  39    &lt;div id=&quot;result&quot; class=&quot;result&quot; role=&quot;status&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
  40  &lt;/main&gt;
- 41  &lt;script type=&quot;module&quot;&gt;</pre></div><div><div class="ct">C. Final version — final/index.html (cont.)</div><pre class="code"> 42    import { mountApp } from &quot;./src/ui/app.js&quot;;
+ 41  &lt;script type=&quot;module&quot;&gt;
+ 42    import { mountApp } from &quot;./src/ui/app.js&quot;;
  43    mountApp(document);
  44  &lt;/script&gt;
  45  &lt;/body&gt;
- 46  &lt;/html&gt;</pre><div class="ct">C. Final version — final/src/ui/styles.css</div><pre class="code">  1  * { box-sizing: border-box; }
-  2  body { font-family: system-ui, sans-serif; margin: 0; background: #f6f7f9; color:
-   ↳  #1d2330; }
-  3  main { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
-  4  h1 { font-size: 1.5rem; margin: 0 0 .25rem; }
-  5  .now { color: #5b6475; margin-top: 0; }
-  6  fieldset { border: 1px solid #d9dde5; border-radius: 10px; background: #fff; marg
-   ↳ in: 0 0 16px; padding: 12px 16px; }
-  7  legend { font-weight: 600; padding: 0 4px; }
-  8  label { display: block; margin: 6px 0; }
-  9  input[type=number], input[type=date], input[type=time] { width: 100%; padding: 8p
-   ↳ x; font-size: 1rem; border: 1px solid #c4cad6; border-radius: 6px; }
- 10  .equipment { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,
+ 46  &lt;/html&gt;</pre><div class="ct">C. Final version — final/src/ui/styles.css</div><pre class="code">  1  /* Layout: single centered column of three numbered fieldsets (requirements → roo
+   ↳ m → time), result below. */
+  2  :root {
+  3    --bg: #f5f6f8; --surface: #ffffff; --fg: #1d2330; --muted: #5b6475; --line: #d9
+   ↳ dde5;
+  4    --accent: #2950c8; --accent-fg: #ffffff; --hover: #eef1f7;
+  5    --ok-bg: #e3f6e8; --ok-fg: #145c2a; --err-bg: #fde8e8; --err-fg: #8a1c1c; --war
+   ↳ n-bg: #fff4d6; --warn-fg: #7a5200;
+  6  }
+  7  @media (prefers-color-scheme: dark) {
+  8    :root:not([data-theme=&quot;light&quot;]) {
+  9      --bg: #12151c; --surface: #1b2029; --fg: #e6e9ef; --muted: #9aa3b5; --line: #
+   ↳ 2d3442;
+ 10      --accent: #7f9cff; --accent-fg: #0f1320; --hover: #232a36;
+ 11      --ok-bg: #143322; --ok-fg: #9ee6b4; --err-bg: #3a1a1c; --err-fg: #ffb3b3; --w
+   ↳ arn-bg: #352a10; --warn-fg: #f4d27a;
+ 12      color-scheme: dark;
+ 13    }
+ 14  }
+ 15  :root[data-theme=&quot;dark&quot;] {
+ 16    --bg: #12151c; --surface: #1b2029; --fg: #e6e9ef; --muted: #9aa3b5; --line: #2d
+   ↳ 3442;
+ 17    --accent: #7f9cff; --accent-fg: #0f1320; --hover: #232a36;
+ 18    --ok-bg: #143322; --ok-fg: #9ee6b4; --err-bg: #3a1a1c; --err-fg: #ffb3b3; --war
+   ↳ n-bg: #352a10; --warn-fg: #f4d27a;
+ 19    color-scheme: dark;
+ 20  }</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>24</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">C. Final version — final/src/ui/styles.css (cont.)</div><pre class="code"> 21  * { box-sizing: border-box; }
+ 22  body { font-family: system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif; margin: 0; 
+   ↳ background: var(--bg); color: var(--fg); }
+ 23  main { max-width: 640px; margin: 0 auto; padding-block: 24px; padding-left: max(1
+   ↳ 6px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inse
+   ↳ t-right, 0px)); }
+ 24  h1 { font-size: 1.5rem; margin: 0 0 .25rem; text-wrap: balance; }
+ 25  .now { color: var(--muted); margin-top: 0; }
+ 26  fieldset { border: 1px solid var(--line); border-radius: 10px; background: var(--
+   ↳ surface); margin: 0 0 16px; padding: 12px 16px; min-width: 0; }
+ 27  legend { font-weight: 600; padding: 0 4px; }
+ 28  label { display: block; margin: 6px 0; }
+ 29  input[type=number], input[type=date], input[type=time] { width: 100%; padding: 8p
+   ↳ x; font-size: 1rem; border: 1px solid var(--line); border-radius: 6px; background
+   ↳ : var(--surface); color: var(--fg); }
+ 30  input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); out
+   ↳ line-offset: 2px; }
+ 31  .equipment { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,
    ↳  1fr)); }
- 11  .rooms { list-style: none; padding: 0; margin: 0; }
- 12  .room { display: flex; gap: 10px; align-items: flex-start; padding: 8px; border-r
+ 32  .rooms { list-style: none; padding: 0; margin: 0; }
+ 33  .room { display: flex; gap: 10px; align-items: flex-start; padding: 8px; border-r
    ↳ adius: 6px; cursor: pointer; }
- 13  .room:hover { background: #f0f3f8; }
- 14  .room small { display: block; color: #5b6475; }
- 15  .room.blocked { opacity: .7; }
- 16  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr))
+ 34  .room:hover { background: var(--hover); }
+ 35  .room small { display: block; color: var(--muted); }
+ 36  .room.blocked { opacity: .7; }
+ 37  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr))
    ↳ ; gap: 8px; }
- 17  .empty { color: #8a5a00; background: #fff6e0; padding: 10px; border-radius: 6px; 
-   ↳ }
- 18  button { width: 100%; padding: 12px; font-size: 1rem; border: 0; border-radius: 8
-   ↳ px; background: #2950c8; color: #fff; cursor: pointer; }
- 19  .result { margin-top: 16px; padding: 12px; border-radius: 8px; }
- 20  .result:empty { display: none; }
- 21  .ok { background: #e3f6e8; color: #145c2a; }
- 22  .error { background: #fde8e8; color: #8a1c1c; }</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>24</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">D. Tests — final/tests/availability.test.js</div><pre class="code">  1  // Regression tests AC1–AC5 against the REFACTORED domain module.
+ 38  .empty { color: var(--warn-fg); background: var(--warn-bg); padding: 10px; border
+   ↳ -radius: 6px; }
+ 39  button { width: 100%; padding: 12px; font-size: 1rem; border: 0; border-radius: 8
+   ↳ px; background: var(--accent); color: var(--accent-fg); cursor: pointer; }
+ 40  .result { margin-top: 16px; padding: 12px; border-radius: 8px; }
+ 41  .result:empty { display: none; }
+ 42  .ok { background: var(--ok-bg); color: var(--ok-fg); }
+ 43  .error { background: var(--err-bg); color: var(--err-fg); }</pre></div><div><div class="ct">D. Tests — final/tests/availability.test.js</div><pre class="code">  1  // Regression tests AC1–AC5 against the REFACTORED domain module.
   2  import test from &quot;node:test&quot;;
   3  import assert from &quot;node:assert/strict&quot;;
   4  import { checkAvailability } from &quot;../src/domain/availability.js&quot;;
@@ -986,7 +1021,8 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  30  });
  31  test(&quot;AC3/F3: blocked room is never reported available, even with a free slot&quot;, (
    ↳ ) =&gt; {
- 32    const r = checkAvailability(findRoom(ROOMS, &quot;AUD1&quot;), slot(&quot;15:00&quot;, &quot;16:00&quot;), NO</pre></div><div><div class="ct">D. Tests — final/tests/availability.test.js (cont.)</div><pre class="code">   ↳ W);
+ 32    const r = checkAvailability(findRoom(ROOMS, &quot;AUD1&quot;), slot(&quot;15:00&quot;, &quot;16:00&quot;), NO</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>25</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">D. Tests — final/tests/availability.test.js (cont.)</div><pre class="code">   ↳ W);
  33    assert.equal(r.ok, false);
  34    assert.equal(r.reason, &quot;blocked&quot;);
  35  });
@@ -1018,8 +1054,7 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  57  test(&quot;No room selected gives a clear message instead of a crash&quot;, () =&gt; {
  58    assert.equal(checkAvailability(null, slot(&quot;15:00&quot;, &quot;16:00&quot;), NOW).reason, &quot;no-r
    ↳ oom&quot;);
- 59  });</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>25</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">D. Tests — final/tests/filters.test.js</div><pre class="code">  1  // New feature tests F1–F3 (pure filtering logic).
+ 59  });</pre></div><div><div class="ct">D. Tests — final/tests/filters.test.js</div><pre class="code">  1  // New feature tests F1–F3 (pure filtering logic).
   2  import test from &quot;node:test&quot;;
   3  import assert from &quot;node:assert/strict&quot;;
   4  import { filterRooms } from &quot;../src/domain/filters.js&quot;;
@@ -1056,7 +1091,8 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  32  test(&quot;F2: one missing item excludes the room (whiteboard + video-conf -&gt; R105 onl
    ↳ y)&quot;, () =&gt; {
  33    assert.deepEqual(ids(filterRooms(ROOMS, { equipment: [&quot;whiteboard&quot;, &quot;video-conf
-   ↳ &quot;] })), [&quot;R105&quot;]);</pre></div><div><div class="ct">D. Tests — final/tests/filters.test.js (cont.)</div><pre class="code"> 34  });
+   ↳ &quot;] })), [&quot;R105&quot;]);</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>26</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">D. Tests — final/tests/filters.test.js (cont.)</div><pre class="code"> 34  });
  35  test(&quot;F1+F2 combined: 25 attendees + projector -&gt; R301, AUD1 (blocked shown, flag
    ↳ ged)&quot;, () =&gt; {
  36    const out = filterRooms(ROOMS, { attendees: 25, equipment: [&quot;projector&quot;] });
@@ -1090,8 +1126,7 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
    ↳ ent(&quot;submit&quot;, { cancelable: true }));
  19    const result = () =&gt; doc.getElementById(&quot;result&quot;);
  20    const roomIds = () =&gt; [...doc.querySelectorAll(&quot;input[name=room]&quot;)].map((r) =&gt; 
-   ↳ r.value);</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>26</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">D. Tests — final/tests/ui.test.js (cont.)</div><pre class="code"> 21    return { doc, set, pick, submit, result, roomIds, fire };
+   ↳ r.value);</pre></div><div><div class="ct">D. Tests — final/tests/ui.test.js (cont.)</div><pre class="code"> 21    return { doc, set, pick, submit, result, roomIds, fire };
  22  }
  23  
  24  test(&quot;UI: successful availability check shows green &#x27;available&#x27; feedback&quot;, () =&gt; 
@@ -1128,7 +1163,8 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  52    assert.equal(ui.roomIds().length, 5);
  53    const cb = ui.doc.querySelector(&#x27;input[name=equipment][value=computers]&#x27;);
  54    cb.checked = true; ui.fire(cb, &quot;input&quot;);
- 55    assert.deepEqual(ui.roomIds(), [&quot;LAB2&quot;]);</pre></div><div><div class="ct">D. Tests — final/tests/ui.test.js (cont.)</div><pre class="code"> 56  });
+ 55    assert.deepEqual(ui.roomIds(), [&quot;LAB2&quot;]);</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>27</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">D. Tests — final/tests/ui.test.js (cont.)</div><pre class="code"> 56  });
  57  
  58  test(&quot;AC6 (UI): invalid slot gives clear error text; layout has responsive viewpo
    ↳ rt&quot;, () =&gt; {
@@ -1162,8 +1198,7 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  22  ✖ AC1 (A3 wording): start exactly at now 09:00 is rejected (0.622197ms)
  23    AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
  24    
- 25    true !== false</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>27</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">E. Test results — npm run test:baseline (actual output) (cont.)</div><pre class="code"> 26    
+ 25    true !== false</pre></div><div><div class="ct">E. Test results — npm run test:baseline (actual output) (cont.)</div><pre class="code"> 26    
  27        at TestContext.&lt;anonymous&gt; (/home/claude/smart-campus/baseline/tests/baseli
    ↳ ne.test.js:17:10)
  28        at Test.runInAsyncScope (node:async_hooks:214:14)
@@ -1197,7 +1232,8 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
  14  ✔ AC4 boundary: overlapping interval 10:59–11:30 is rejected (0.216795ms)
  15  ✔ AC4: interval fully containing a booking is rejected (0.089226ms)
  16  ✔ AC5: booking data is immutable (frozen) and unchanged after checks (0.321271ms)
- 17  ✔ Room-specific data: same slot is busy in R301 but free in R210 (0.064969ms)</pre></div><div><div class="ct">E. Test results — npm test (actual output) (cont.)</div><pre class="code"> 18  ✔ No room selected gives a clear message instead of a crash (0.079828ms)
+ 17  ✔ Room-specific data: same slot is busy in R301 but free in R210 (0.064969ms)</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>28</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">E. Test results — npm test (actual output) (cont.)</div><pre class="code"> 18  ✔ No room selected gives a clear message instead of a crash (0.079828ms)
  19  ✔ Catalog has at least four rooms with id, name, capacity, equipment, blocked, bo
    ↳ okings (0.658507ms)
  20  ✔ F1 boundary: exact capacity (12) keeps Seminar Room 105 (0.238782ms)
@@ -1231,8 +1267,7 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
   2  ℹ pass 26
   3  ℹ fail 1
   4  ✖ failing tests:
-  5  ✖ AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed (0.744</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>28</span></div></section>
-<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">E. Mutation check 1 — overlaps() &lt; → &lt;= (cont.)</div><pre class="code">   ↳ 911ms)</pre><div class="ct">E. Mutation check 2 — every → some</div><pre class="code">  1  ✖ F1 boundary: exact capacity (12) keeps Seminar Room 105 (4.567867ms)
+  5  ✖ AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed (0.744</pre></div><div><div class="ct">E. Mutation check 1 — overlaps() &lt; → &lt;= (cont.)</div><pre class="code">   ↳ 911ms)</pre><div class="ct">E. Mutation check 2 — every → some</div><pre class="code">  1  ✖ F1 boundary: exact capacity (12) keeps Seminar Room 105 (4.567867ms)
   2  ✖ F1: empty attendees means no capacity restriction (0.288022ms)
   3  ✖ F2: room must contain ALL selected equipment (projector + computers -&gt; LAB2 onl
    ↳ y) (0.781866ms)
@@ -1264,14 +1299,16 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
    ↳ 3.554201ms)
  20  ✖ F1/F2 (UI): filters update the visible room list (6.931766ms)
  21  ✖ AC6 (UI): invalid slot gives clear error text; layout has responsive viewport (
-   ↳ 6.417976ms)</pre></div><div><div class="ct">E. Git history — git log --oneline</div><pre class="code">  1  fb0bfe8 Fix AC1: start must be strictly after now (Assignment #03 wording); add b
+   ↳ 6.417976ms)</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>29</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div><div class="acols"><div><div class="ct">E. Git history — git log --oneline</div><pre class="code">  1  e6e2a8b Theme tokens (light/dark) for UI, single-file demo bundle, live demo link
+  2  fb0bfe8 Fix AC1: start must be strictly after now (Assignment #03 wording); add b
    ↳ oundary tests
-  2  2625ea8 Report: single self-contained PDF with code appendix; clarify reconstruct
+  3  2625ea8 Report: single self-contained PDF with code appendix; clarify reconstruct
    ↳ ed baseline
-  3  78a824c Docs: report, diagrams, screenshots, test evidence
-  4  a78e2e9 Final: room catalog, F1-F5 filtering, refactor into data/domain/ui module
+  4  78a824c Docs: report, diagrams, screenshots, test evidence
+  5  a78e2e9 Final: room catalog, F1-F5 filtering, refactor into data/domain/ui module
    ↳ s, 25 tests
-  5  535bb88 Baseline: fix test script
-  6  48bd593 Baseline: single-room prototype (Assignment #03) + AC regression tests</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>29</span></div></section><!-- APPENDIX END -->
+  6  535bb88 Baseline: fix test script
+  7  48bd593 Baseline: single-room prototype (Assignment #03) + AC regression tests</pre></div></div><div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>30</span></div></section><!-- APPENDIX END -->
 </body>
 </html>
