@@ -3,9 +3,8 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "test:baseline": "node --test baseline/tests/",
-    "test": "node --test final/tests/",
+    "test:baseline": "node --test --test-reporter=spec baseline/tests/*.test.js",
+    "test": "node --test --test-reporter=spec final/tests/*.test.js",
     "start": "python3 -m http.server 8080"
-  },
-  "devDependencies": {}
+  }
 }
