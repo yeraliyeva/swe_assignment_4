@@ -1,3 +1,4 @@
+e6e2a8b Theme tokens (light/dark) for UI, single-file demo bundle, live demo link
 fb0bfe8 Fix AC1: start must be strictly after now (Assignment #03 wording); add boundary tests
 2625ea8 Report: single self-contained PDF with code appendix; clarify reconstructed baseline
 78a824c Docs: report, diagrams, screenshots, test evidence
