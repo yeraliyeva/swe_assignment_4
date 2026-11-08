@@ -1,3 +1,6 @@
+fb0bfe8 Fix AC1: start must be strictly after now (Assignment #03 wording); add boundary tests
+2625ea8 Report: single self-contained PDF with code appendix; clarify reconstructed baseline
+78a824c Docs: report, diagrams, screenshots, test evidence
 a78e2e9 Final: room catalog, F1-F5 filtering, refactor into data/domain/ui modules, 25 tests
 535bb88 Baseline: fix test script
 48bd593 Baseline: single-room prototype (Assignment #03) + AC regression tests

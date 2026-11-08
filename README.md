@@ -6,6 +6,8 @@ AI-assisted evolution of the Assignment #03 single-room prototype into a multi-r
 capacity/equipment filtering, a refactored module structure and an automated test suite.
 Fictional data only. No login, payments, live APIs or database. Fixed current time: **2026-11-10 09:00**.
 
+**Live demo:** https://claude.ai/artifact/FrjuW8bPsPiKPbPwGoD6WU
+
 ## Layout
 
 ```
@@ -45,11 +47,11 @@ npm start              # python3 -m http.server 8080
 ## Test
 
 ```bash
-npm run test:baseline  # 8 AC regression tests against the original prototype
-npm test               # 25 tests against the final version (AC1–AC6, F1–F5, UI integration)
+npm run test:baseline  # 9 AC regression tests against the original prototype (8 pass)
+npm test               # 27 tests against the final version (AC1–AC6, F1–F5, UI integration)
 ```
 
-Results recorded on 2026-11-08: baseline **8/8 passed**, final **25/25 passed**
+Results recorded on 2026-11-08: baseline **8/9 passed** (the reconstructed baseline accepts a start exactly at "now", which Assignment #03 AC1 forbids), final **27/27 passed**
 (full output in `docs/evidence/`).
 
 ## Git history
@@ -62,7 +64,7 @@ git log --oneline      # baseline commit first, final refactor after it
 
 | ID | Rule |
 |----|------|
-| AC1 | Valid HH:MM times, end after start, start not before the fixed current time |
+| AC1 | Valid HH:MM times, end after start, start strictly after the fixed current time |
 | AC2 | Maximum 120 minutes (120 allowed, 121 rejected) |
 | AC3 | Blocked room cannot be booked |
 | AC4 | Half-open intervals: touching bookings allowed, overlapping rejected |
