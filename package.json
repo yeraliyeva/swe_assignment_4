@@ -1,0 +1,11 @@
+{
+  "name": "smart-campus-room-checker",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "test:baseline": "node --test baseline/tests/",
+    "test": "node --test final/tests/",
+    "start": "python3 -m http.server 8080"
+  },
+  "devDependencies": {}
+}
