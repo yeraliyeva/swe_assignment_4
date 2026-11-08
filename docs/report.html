@@ -39,7 +39,12 @@
   .small p, .small li { font-size: 16.5px; }
   .reflect p { font-size: 16.5px; line-height: 1.5; margin: 0 0 10px; }
 </style>
-</head>
+<style>
+.appx{padding:30px 40px 34px}
+.acols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}
+.ct{font-size:12px;font-weight:700;color:#2950c8;margin:4px 0 2px}
+pre.code{font-size:10.6px;line-height:1.36;padding:6px 9px;margin:0 0 6px;border-radius:6px;white-space:pre;background:#111827;color:#e5e7eb;overflow:hidden}
+</style></head>
 <body>
 
 <!-- 1 -->
@@ -59,10 +64,10 @@
 <!-- 2 -->
 <section class="slide">
   <div class="tag">Starting point and scope</div>
-  <h1>Baseline: one room, one file</h1>
+  <h1>Baseline: reconstructed single-room prototype</h1>
   <div class="cols">
     <div>
-      <p>The Assignment #03 prototype was reconstructed as an equivalent minimal version and committed first (<code>48bd593</code>) so every later change has a recorded baseline.</p>
+      <p>Assignment #03 was not completed, so — as the brief allows — an <b>equivalent minimal version</b> of the single-room prototype was reconstructed first and committed as the baseline (<code>48bd593</code>), so every later change has a recorded starting point.</p>
       <ul>
         <li><code>baseline/app.js</code> — 94 lines: room data, rules and DOM handlers together</li>
         <li>One room (<i>Room 301</i>), two fictional bookings</li>
@@ -114,7 +119,7 @@
         <li>≥ 10 executable tests incl. 120/121 min, touching/overlap, exact/insufficient capacity, one UI check</li>
       </ul>
       <h2>Source of the context</h2>
-      <p class="small" style="font-size:16.5px">The assignment brief (Lesson 08 slides) and the submission instructions were given to the assistant verbatim, together with the baseline file.</p>
+      <p class="small" style="font-size:16.5px">The assignment brief (Lesson 08 slides) and the submission instructions were given verbatim. Because there was no Assignment #03 code, the assistant first reconstructed the minimal baseline from AC1–AC6; that file was then the codebase it analysed.</p>
     </div>
   </div>
   <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>3</span></div>
@@ -323,7 +328,7 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
 <section class="slide reflect">
   <div class="tag">Task 06 · AI reflection</div>
   <h1>Reflection on working with the AI assistant</h1>
-  <p><b>Context.</b> I gave Claude the full Assignment #04 brief, the submission instructions and the baseline single-room code, with the acceptance criteria AC1–AC6, the new rules F1–F5 and the constraints: fictional data only, no login, APIs or database, and no full rewrite. Stating the boundary values explicitly (120/121 minutes, touching vs overlapping, exact vs insufficient capacity) produced tests aimed at the risky edges instead of generic happy paths.</p>
+  <p><b>Context.</b> I had not completed Assignment #03, so I first asked Claude to reconstruct a minimal single-room baseline from the acceptance criteria and committed it. I then gave it the full Assignment #04 brief, the submission instructions and that baseline, with the acceptance criteria AC1–AC6, the new rules F1–F5 and the constraints: fictional data only, no login, APIs or database, and no full rewrite. Stating the boundary values explicitly (120/121 minutes, touching vs overlapping, exact vs insufficient capacity) produced tests aimed at the risky edges instead of generic happy paths.</p>
   <p><b>Useful and incorrect suggestions.</b> The most useful output was the risk list, especially the hidden default room in <code>checkAvailability()</code>, which would have let the multi-room version check the wrong room's bookings. Not everything was right: the first input handler duplicated slot validation, recreating the problem the refactor was meant to remove, and the first test script used a directory path that Node 22 rejects. I also rejected hiding blocked rooms, because users would not understand why a room disappeared.</p>
   <p><b>What I verified.</b> I ran both test suites and read the output, injected two deliberate bugs to confirm the tests fail, opened the app and checked each scenario on the screenshots, and recounted the duplication metrics with grep instead of trusting estimates.</p>
   <p><b>Influence of tests.</b> Writing the baseline regression suite before refactoring meant every structural change could be accepted or rejected on evidence. The mutation checks showed the AC4 boundary test is the only guard for touching intervals, so I kept it as a named boundary case.</p>
@@ -337,7 +342,7 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
   <h1>AI evidence appendix</h1>
   <table class="small" style="font-size:14.5px">
     <tr><th style="width:12%">Tool / date</th><th style="width:20%">Prompt summary</th><th style="width:20%">Output used</th><th style="width:18%">Problems found</th><th style="width:15%">Changes made</th><th>Verification</th></tr>
-    <tr><td>Claude Opus 5.5 (Anthropic), claude.ai · 8 Nov 2026</td><td>Assignment brief + instructions + baseline code; asked for risk analysis and a small step-by-step plan</td><td>Risks R1–R5, 7-step plan (slides 4–5)</td><td>None blocking; plan initially hid blocked rooms</td><td>Kept blocked rooms visible, flagged</td><td>Line references checked against <code>baseline/app.js</code></td></tr>
+    <tr><td>Claude Opus 5.5 (Anthropic), claude.ai · 8 Nov 2026</td><td>No Assignment #03 code: asked to reconstruct a minimal single-room baseline (AC1–AC6), then for risk analysis and a small plan</td><td>Baseline <code>app.js</code> + 8 AC tests; risks R1–R5; 7-step plan</td><td>Plan initially hid blocked rooms</td><td>Kept blocked rooms visible, flagged</td><td>Baseline 8/8 tests; line refs checked in <code>baseline/app.js</code></td></tr>
     <tr><td>same session</td><td>Implement catalog + F1–F5 one module at a time, keep AC1–AC6</td><td><code>rooms.js, time.js, availability.js, filters.js, render.js, app.js</code></td><td>Input handler duplicated AC1 validation</td><td>Simplified to single <code>refresh()</code></td><td>25/25 tests; diff review; screenshots</td></tr>
     <tr><td>same session</td><td>Write ≥10 tests incl. listed boundaries + one UI check</td><td>3 test files, 25 tests; baseline suite 8 tests</td><td>Test script path failed on Node 22</td><td>Glob in <code>package.json</code></td><td>Commands re-run, output saved</td></tr>
     <tr><td>same session</td><td>Confirm tests detect real defects</td><td>Two mutation runs</td><td>—</td><td>Mutations reverted</td><td>24/25 and 16/25 when mutated; 25/25 after revert</td></tr>
@@ -350,22 +355,18 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
 <!-- 16 -->
 <section class="slide">
   <div class="tag">Submission</div>
-  <h1>Deliverables and checklist</h1>
+  <h1>Deliverables (all included in this PDF) and checklist</h1>
   <div class="cols">
     <div>
-<pre>smart-campus/
-├─ README.md            setup · run · test
-├─ package.json         npm test / test:baseline
-├─ baseline/            initial version + 8 tests
-├─ final/
-│  ├─ index.html
-│  ├─ src/data|domain|ui
-│  └─ tests/            25 tests
-└─ docs/
-   ├─ report.pdf        this report
-   ├─ img/              screenshots, diagrams
-   └─ evidence/         test outputs, mutations, git log</pre>
-      <p class="small" style="font-size:16px">Git: <code>48bd593</code> baseline → <code>a78e2e9</code> final.</p>
+      <table class="small">
+        <tr><th>Required deliverable</th><th>Where</th></tr>
+        <tr><td>Source code — initial and final versions</td><td>Appendix B, C (p. 17–24) · Git <code>48bd593</code> → <code>a78e2e9</code></td></tr>
+        <tr><td>README with setup, run and test commands</td><td>Appendix A (p. 17)</td></tr>
+        <tr><td>Test files and actual execution results</td><td>Appendix D, E · slides 11–12</td></tr>
+        <tr><td>Analysis / refactoring report, diagrams, quality comparison</td><td>Slides 3–13</td></tr>
+        <tr><td>AI evidence appendix</td><td>Slides 5, 14, 15</td></tr>
+      </table>
+      <p class="small" style="font-size:16px">Run locally: <code>npm install</code> · <code>npm test</code> · <code>npm start</code> → <code>localhost:8080/final/</code></p>
     </div>
     <div>
       <table class="small">
@@ -382,5 +383,845 @@ $ npm test                    # node --test --test-reporter=spec final/tests/*.t
   <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>16</span></div>
 </section>
 
+<!-- APPENDIX START --><section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">A. README.md</div><pre class="code">  1  # Smart Campus Room Availability Checker — Assignment #04
+  2  
+  3  Author: Yeraliyeva Anel (24B031020) · Software Engineering, KBTU · Practice: Tues
+   ↳ day 18:00–19:00
+  4  
+  5  AI-assisted evolution of the Assignment #03 single-room prototype into a multi-ro
+   ↳ om checker with
+  6  capacity/equipment filtering, a refactored module structure and an automated test
+   ↳  suite.
+  7  Fictional data only. No login, payments, live APIs or database. Fixed current tim
+   ↳ e: **2026-11-10 09:00**.
+  8  
+  9  ## Layout
+ 10  
+ 11  ```
+ 12  baseline/               original single-room prototype (initial version)
+ 13    index.html, app.js    data + rules + DOM in one file
+ 14    tests/baseline.test.js  AC1–AC5 regression checks on the original
+ 15  final/                  refactored multi-room version (final version)
+ 16    index.html
+ 17    src/data/rooms.js        room catalog (5 rooms, deep-frozen) + fixed NOW
+ 18    src/domain/time.js       time parsing + overlap rule (single source of truth)
+ 19    src/domain/availability.js  AC1–AC4 rules for ONE room (pure)
+ 20    src/domain/filters.js    F1–F3 filtering (pure)
+ 21    src/ui/render.js         DOM rendering only
+ 22    src/ui/app.js            controller: wires form events to domain + render
+ 23    tests/                   availability, filters, ui (jsdom) suites
+ 24  docs/evidence/          saved test outputs and mutation-check results
+ 25  ```
+ 26  
+ 27  ## Setup
+ 28  
+ 29  Requires Node.js 18+ (tested with v22) and Python 3 (only for the static server).
+ 30  
+ 31  ```bash
+ 32  npm install            # installs jsdom (dev dependency for the UI test)
+ 33  ```
+ 34  </pre></div><div><div class="ct">A. README.md (cont.)</div><pre class="code"> 35  ## Run
+ 36  
+ 37  ES modules need to be served over HTTP (not file://):
+ 38  
+ 39  ```bash
+ 40  npm start              # python3 -m http.server 8080
+ 41  # open http://localhost:8080/final/      (refactored version)
+ 42  # open http://localhost:8080/baseline/   (original version)
+ 43  ```
+ 44  
+ 45  ## Test
+ 46  
+ 47  ```bash
+ 48  npm run test:baseline  # 8 AC regression tests against the original prototype
+ 49  npm test               # 25 tests against the final version (AC1–AC6, F1–F5, UI i
+   ↳ ntegration)
+ 50  ```
+ 51  
+ 52  Results recorded on 2026-11-08: baseline **8/8 passed**, final **25/25 passed**
+ 53  (full output in `docs/evidence/`).
+ 54  
+ 55  ## Git history
+ 56  
+ 57  ```bash
+ 58  git log --oneline      # baseline commit first, final refactor after it
+ 59  ```
+ 60  
+ 61  ## Acceptance criteria
+ 62  
+ 63  | ID | Rule |
+ 64  |----|------|
+ 65  | AC1 | Valid HH:MM times, end after start, start not before the fixed current ti
+   ↳ me |
+ 66  | AC2 | Maximum 120 minutes (120 allowed, 121 rejected) |
+ 67  | AC3 | Blocked room cannot be booked |
+ 68  | AC4 | Half-open intervals: touching bookings allowed, overlapping rejected |
+ 69  | AC5 | Booking data is never mutated (catalog is deep-frozen) |
+ 70  | AC6 | Clear, responsive feedback (status region, mobile viewport) |</pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>17</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">A. README.md (cont.)</div><pre class="code"> 71  | F1 | Capacity ≥ attendees |
+ 72  | F2 | Room has ALL selected equipment |
+ 73  | F3 | Blocked room never reported available (shown with BLOCKED label) |
+ 74  | F4 | Clear empty state when no rooms match |
+ 75  | F5 | Changing the selected room refreshes the result with that room&#x27;s bookings 
+   ↳ |</pre><div class="ct">A. package.json</div><pre class="code">  1  {
+  2    &quot;name&quot;: &quot;smart-campus-room-checker&quot;,
+  3    &quot;version&quot;: &quot;2.0.0&quot;,
+  4    &quot;private&quot;: true,
+  5    &quot;scripts&quot;: {
+  6      &quot;test:baseline&quot;: &quot;node --test --test-reporter=spec baseline/tests/*.test.js&quot;,
+  7      &quot;test&quot;: &quot;node --test --test-reporter=spec final/tests/*.test.js&quot;,
+  8      &quot;start&quot;: &quot;python3 -m http.server 8080&quot;
+  9    },
+ 10    &quot;devDependencies&quot;: {
+ 11      &quot;jsdom&quot;: &quot;^24.1.3&quot;
+ 12    }
+ 13  }</pre><div class="ct">B. Initial version — baseline/app.js</div><pre class="code">  1  // Smart Campus Room Availability Checker — BASELINE (Assignment #03 / Practice #
+   ↳ 06 style)
+  2  // Single room, single file: data, rules and DOM code are mixed together.
+  3  
+  4  var NOW = &quot;2026-11-10T09:00&quot;; // fixed &quot;current time&quot; for the prototype
+  5  
+  6  var room = {
+  7    name: &quot;Room 301&quot;,
+  8    blocked: false,
+  9    bookings: [
+ 10      { start: &quot;2026-11-10T10:00&quot;, end: &quot;2026-11-10T11:00&quot;, title: &quot;Algorithms lect
+   ↳ ure&quot; },
+ 11      { start: &quot;2026-11-10T13:00&quot;, end: &quot;2026-11-10T14:30&quot;, title: &quot;Club meeting&quot; }
+ 12    ]
+ 13  };</pre></div><div><div class="ct">B. Initial version — baseline/app.js (cont.)</div><pre class="code"> 14  
+ 15  function checkAvailability(date, startTime, endTime, r) {
+ 16    r = r || room;
+ 17    // AC1: valid time
+ 18    if (!/^\d{2}:\d{2}$/.test(startTime) || !/^\d{2}:\d{2}$/.test(endTime)) {
+ 19      return { ok: false, message: &quot;Please enter a valid start and end time.&quot; };
+ 20    }
+ 21    var s = new Date(date + &quot;T&quot; + startTime).getTime();
+ 22    var e = new Date(date + &quot;T&quot; + endTime).getTime();
+ 23    if (isNaN(s) || isNaN(e)) {
+ 24      return { ok: false, message: &quot;Please enter a valid start and end time.&quot; };
+ 25    }
+ 26    if (e &lt;= s) {
+ 27      return { ok: false, message: &quot;End time must be after start time.&quot; };
+ 28    }
+ 29    if (s &lt; new Date(NOW).getTime()) {
+ 30      return { ok: false, message: &quot;Start time cannot be in the past.&quot; };
+ 31    }
+ 32    // AC2: 120 minute max
+ 33    if ((e - s) / 60000 &gt; 120) {
+ 34      return { ok: false, message: &quot;Bookings cannot be longer than 120 minutes.&quot; };
+ 35    }
+ 36    // AC3: blocked room
+ 37    if (r.blocked) {
+ 38      return { ok: false, message: r.name + &quot; is blocked and cannot be booked.&quot; };
+ 39    }
+ 40    // AC4: overlap (touching intervals are allowed)
+ 41    for (var i = 0; i &lt; r.bookings.length; i++) {
+ 42      var b = r.bookings[i];
+ 43      var bs = new Date(b.start).getTime();
+ 44      var be = new Date(b.end).getTime();
+ 45      if (s &lt; be &amp;&amp; bs &lt; e) {
+ 46        return { ok: false, message: &quot;Conflicts with \&quot;&quot; + b.title + &quot;\&quot;.&quot; };
+ 47      }
+ 48    }
+ 49    return { ok: true, message: r.name + &quot; is available.&quot; };
+ 50  }
+ 51  </pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>18</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">B. Initial version — baseline/app.js (cont.)</div><pre class="code"> 52  // ---------- UI (duplicated validation + rendering in two handlers) ----------
+ 53  if (typeof document !== &quot;undefined&quot;) {
+ 54    document.addEventListener(&quot;DOMContentLoaded&quot;, function () {
+ 55      var form = document.getElementById(&quot;form&quot;);
+ 56      var out = document.getElementById(&quot;result&quot;);
+ 57      document.getElementById(&quot;roomName&quot;).textContent = room.name;
+ 58  
+ 59      form.addEventListener(&quot;submit&quot;, function (ev) {
+ 60        ev.preventDefault();
+ 61        var d = document.getElementById(&quot;date&quot;).value;
+ 62        var st = document.getElementById(&quot;start&quot;).value;
+ 63        var en = document.getElementById(&quot;end&quot;).value;
+ 64        // duplicated quick validation (same as AC1 in checkAvailability)
+ 65        if (!/^\d{2}:\d{2}$/.test(st) || !/^\d{2}:\d{2}$/.test(en)) {
+ 66          out.className = &quot;result error&quot;;
+ 67          out.textContent = &quot;Please enter a valid start and end time.&quot;;
+ 68          return;
+ 69        }
+ 70        var res = checkAvailability(d, st, en);
+ 71        out.className = res.ok ? &quot;result ok&quot; : &quot;result error&quot;;
+ 72        out.textContent = res.message;
+ 73      });
+ 74  
+ 75      form.addEventListener(&quot;change&quot;, function () {
+ 76        var d = document.getElementById(&quot;date&quot;).value;
+ 77        var st = document.getElementById(&quot;start&quot;).value;
+ 78        var en = document.getElementById(&quot;end&quot;).value;
+ 79        // duplicated quick validation again
+ 80        if (!/^\d{2}:\d{2}$/.test(st) || !/^\d{2}:\d{2}$/.test(en)) {
+ 81          out.className = &quot;result&quot;;
+ 82          out.textContent = &quot;&quot;;
+ 83          return;
+ 84        }
+ 85        var res = checkAvailability(d, st, en);
+ 86        out.className = res.ok ? &quot;result ok&quot; : &quot;result error&quot;;
+ 87        out.textContent = res.message;
+ 88      });
+ 89    });</pre></div><div><div class="ct">B. Initial version — baseline/app.js (cont.)</div><pre class="code"> 90  }
+ 91  
+ 92  if (typeof module !== &quot;undefined&quot;) {
+ 93    module.exports = { checkAvailability: checkAvailability, room: room, NOW: NOW }
+   ↳ ;
+ 94  }</pre><div class="ct">B. Initial version — baseline/index.html</div><pre class="code">  1  &lt;!doctype html&gt;
+  2  &lt;html lang=&quot;en&quot;&gt;
+  3  &lt;head&gt;
+  4  &lt;meta charset=&quot;utf-8&quot;&gt;
+  5  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  6  &lt;title&gt;Room Checker (baseline)&lt;/title&gt;
+  7  &lt;style&gt;
+  8    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 2rem auto;
+   ↳  padding: 0 16px; }
+  9    label { display: block; margin-top: .75rem; }
+ 10    input, button { width: 100%; padding: .5rem; font-size: 1rem; box-sizing: borde
+   ↳ r-box; }
+ 11    button { margin-top: 1rem; }
+ 12    .result { margin-top: 1rem; padding: .75rem; border-radius: 6px; }
+ 13    .ok { background: #e3f6e8; color: #145c2a; }
+ 14    .error { background: #fde8e8; color: #8a1c1c; }
+ 15  &lt;/style&gt;
+ 16  &lt;/head&gt;
+ 17  &lt;body&gt;
+ 18    &lt;h1&gt;Is &lt;span id=&quot;roomName&quot;&gt;&lt;/span&gt; free?&lt;/h1&gt;
+ 19    &lt;p&gt;Current time (fixed): 10 Nov 2026, 09:00&lt;/p&gt;
+ 20    &lt;form id=&quot;form&quot;&gt;
+ 21      &lt;label&gt;Date &lt;input id=&quot;date&quot; type=&quot;date&quot; value=&quot;2026-11-10&quot;&gt;&lt;/label&gt;
+ 22      &lt;label&gt;Start &lt;input id=&quot;start&quot; type=&quot;time&quot;&gt;&lt;/label&gt;
+ 23      &lt;label&gt;End &lt;input id=&quot;end&quot; type=&quot;time&quot;&gt;&lt;/label&gt;
+ 24      &lt;button type=&quot;submit&quot;&gt;Check availability&lt;/button&gt;
+ 25    &lt;/form&gt;
+ 26    &lt;div id=&quot;result&quot; class=&quot;result&quot; role=&quot;status&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
+ 27    &lt;script src=&quot;app.js&quot;&gt;&lt;/script&gt;
+ 28  &lt;/body&gt;</pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>19</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">B. Initial version — baseline/index.html (cont.)</div><pre class="code"> 29  &lt;/html&gt;</pre><div class="ct">B. Initial version — baseline/tests/baseline.test.js</div><pre class="code">  1  // Baseline regression suite: AC1–AC5 run against the ORIGINAL single-room protot
+   ↳ ype.
+  2  const test = require(&quot;node:test&quot;);
+  3  const assert = require(&quot;node:assert/strict&quot;);
+  4  const { checkAvailability, room } = require(&quot;../app.js&quot;);
+  5  
+  6  const D = &quot;2026-11-10&quot;;
+  7  
+  8  test(&quot;AC1: rejects end before start&quot;, () =&gt; {
+  9    assert.equal(checkAvailability(D, &quot;12:00&quot;, &quot;11:00&quot;).ok, false);
+ 10  });
+ 11  
+ 12  test(&quot;AC1: rejects start in the past (before fixed now 09:00)&quot;, () =&gt; {
+ 13    assert.equal(checkAvailability(D, &quot;08:00&quot;, &quot;08:30&quot;).ok, false);
+ 14  });
+ 15  
+ 16  test(&quot;AC2: exactly 120 minutes is allowed&quot;, () =&gt; {
+ 17    assert.equal(checkAvailability(D, &quot;15:00&quot;, &quot;17:00&quot;).ok, true);
+ 18  });
+ 19  
+ 20  test(&quot;AC2: 121 minutes is rejected&quot;, () =&gt; {
+ 21    assert.equal(checkAvailability(D, &quot;15:00&quot;, &quot;17:01&quot;).ok, false);
+ 22  });
+ 23  
+ 24  test(&quot;AC3: blocked room is never available&quot;, () =&gt; {
+ 25    const blocked = { ...room, blocked: true };
+ 26    assert.equal(checkAvailability(D, &quot;15:00&quot;, &quot;16:00&quot;, blocked).ok, false);
+ 27  });
+ 28  
+ 29  test(&quot;AC4: touching interval (11:00-12:00 after 10:00-11:00) is allowed&quot;, () =&gt; {
+ 30    assert.equal(checkAvailability(D, &quot;11:00&quot;, &quot;12:00&quot;).ok, true);
+ 31  });
+ 32  
+ 33  test(&quot;AC4: overlapping interval (10:30-11:30) is rejected&quot;, () =&gt; {
+ 34    assert.equal(checkAvailability(D, &quot;10:30&quot;, &quot;11:30&quot;).ok, false);</pre></div><div><div class="ct">B. Initial version — baseline/tests/baseline.test.js (cont.)</div><pre class="code"> 35  });
+ 36  
+ 37  test(&quot;AC5: checking availability does not mutate booking data&quot;, () =&gt; {
+ 38    const before = JSON.stringify(room.bookings);
+ 39    checkAvailability(D, &quot;10:30&quot;, &quot;11:30&quot;);
+ 40    checkAvailability(D, &quot;15:00&quot;, &quot;16:00&quot;);
+ 41    assert.equal(JSON.stringify(room.bookings), before);
+ 42  });</pre><div class="ct">C. Final version — final/src/data/rooms.js</div><pre class="code">  1  // Room catalog — fictional data only. Deep-frozen so no code path can mutate boo
+   ↳ kings (AC5).
+  2  export const NOW = &quot;2026-11-10T09:00&quot;; // fixed current time
+  3  
+  4  export const EQUIPMENT = Object.freeze([&quot;projector&quot;, &quot;whiteboard&quot;, &quot;video-conf&quot;, 
+   ↳ &quot;computers&quot;]);
+  5  
+  6  const deepFreeze = (obj) =&gt; {
+  7    Object.values(obj).forEach((v) =&gt; { if (v &amp;&amp; typeof v === &quot;object&quot;) deepFreeze(
+   ↳ v); });
+  8    return Object.freeze(obj);
+  9  };
+ 10  
+ 11  export const ROOMS = deepFreeze([
+ 12    {
+ 13      id: &quot;R301&quot;, name: &quot;Room 301&quot;, capacity: 30, blocked: false,
+ 14      equipment: [&quot;projector&quot;, &quot;whiteboard&quot;],
+ 15      bookings: [
+ 16        { start: &quot;2026-11-10T10:00&quot;, end: &quot;2026-11-10T11:00&quot;, title: &quot;Algorithms le
+   ↳ cture&quot; },
+ 17        { start: &quot;2026-11-10T13:00&quot;, end: &quot;2026-11-10T14:30&quot;, title: &quot;Club meeting&quot;
+   ↳  }
+ 18      ]
+ 19    },
+ 20    {
+ 21      id: &quot;R105&quot;, name: &quot;Seminar Room 105&quot;, capacity: 12, blocked: false,
+ 22      equipment: [&quot;whiteboard&quot;, &quot;video-conf&quot;],
+ 23      bookings: [</pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>20</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">C. Final version — final/src/data/rooms.js (cont.)</div><pre class="code"> 24        { start: &quot;2026-11-10T11:00&quot;, end: &quot;2026-11-10T12:00&quot;, title: &quot;Thesis defens
+   ↳ e rehearsal&quot; }
+ 25      ]
+ 26    },
+ 27    {
+ 28      id: &quot;LAB2&quot;, name: &quot;Computer Lab 2&quot;, capacity: 24, blocked: false,
+ 29      equipment: [&quot;projector&quot;, &quot;computers&quot;, &quot;whiteboard&quot;],
+ 30      bookings: [
+ 31        { start: &quot;2026-11-10T09:00&quot;, end: &quot;2026-11-10T10:30&quot;, title: &quot;Programming p
+   ↳ ractice&quot; }
+ 32      ]
+ 33    },
+ 34    {
+ 35      id: &quot;AUD1&quot;, name: &quot;Main Auditorium&quot;, capacity: 120, blocked: true,
+ 36      equipment: [&quot;projector&quot;, &quot;video-conf&quot;],
+ 37      bookings: []
+ 38    },
+ 39    {
+ 40      id: &quot;R210&quot;, name: &quot;Study Room 210&quot;, capacity: 6, blocked: false,
+ 41      equipment: [&quot;whiteboard&quot;],
+ 42      bookings: []
+ 43    }
+ 44  ]);
+ 45  
+ 46  export const findRoom = (rooms, id) =&gt; rooms.find((r) =&gt; r.id === id) || null;</pre><div class="ct">C. Final version — final/src/domain/time.js</div><pre class="code">  1  // Single source of truth for time parsing (previously duplicated in 3 places).
+  2  const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
+  3  
+  4  export const isValidHHMM = (value) =&gt; typeof value === &quot;string&quot; &amp;&amp; HHMM.test(valu
+   ↳ e);
+  5  
+  6  /** Returns epoch ms for &quot;YYYY-MM-DD&quot; + &quot;HH:MM&quot;, or NaN. */
+  7  export const toMillis = (date, hhmm) =&gt; new Date(`${date}T${hhmm}`).getTime();
+  8  
+  9  export const minutesBetween = (startMs, endMs) =&gt; (endMs - startMs) / 60000;
+ 10  </pre></div><div><div class="ct">C. Final version — final/src/domain/time.js (cont.)</div><pre class="code"> 11  /** Half-open intervals [aStart,aEnd) and [bStart,bEnd): touching is NOT overlap.
+   ↳  */
+ 12  export const overlaps = (aStart, aEnd, bStart, bEnd) =&gt; aStart &lt; bEnd &amp;&amp; bStart &lt;
+   ↳  aEnd;</pre><div class="ct">C. Final version — final/src/domain/availability.js</div><pre class="code">  1  // Booking / availability rules AC1–AC4. Pure functions: no DOM, no mutation (AC5
+   ↳ ).
+  2  import { isValidHHMM, toMillis, minutesBetween, overlaps } from &quot;./time.js&quot;;
+  3  
+  4  export const MAX_MINUTES = 120;
+  5  
+  6  export const MESSAGES = Object.freeze({
+  7    invalidTime: &quot;Please enter a valid start and end time.&quot;,
+  8    endBeforeStart: &quot;End time must be after start time.&quot;,
+  9    past: &quot;Start time cannot be in the past.&quot;,
+ 10    tooLong: `Bookings cannot be longer than ${MAX_MINUTES} minutes.`,
+ 11    noRoom: &quot;Please select a room first.&quot;
+ 12  });
+ 13  
+ 14  /** AC1 + AC2: validate the requested slot independently of any room. */
+ 15  export function validateSlot({ date, start, end }, now) {
+ 16    if (!isValidHHMM(start) || !isValidHHMM(end)) return { ok: false, reason: &quot;inva
+   ↳ lid&quot;, message: MESSAGES.invalidTime };
+ 17    const s = toMillis(date, start);
+ 18    const e = toMillis(date, end);
+ 19    if (Number.isNaN(s) || Number.isNaN(e)) return { ok: false, reason: &quot;invalid&quot;, 
+   ↳ message: MESSAGES.invalidTime };
+ 20    if (e &lt;= s) return { ok: false, reason: &quot;order&quot;, message: MESSAGES.endBeforeSta
+   ↳ rt };
+ 21    if (s &lt; new Date(now).getTime()) return { ok: false, reason: &quot;past&quot;, message: M
+   ↳ ESSAGES.past };
+ 22    if (minutesBetween(s, e) &gt; MAX_MINUTES) return { ok: false, reason: &quot;duration&quot;,
+   ↳  message: MESSAGES.tooLong };
+ 23    return { ok: true, startMs: s, endMs: e };
+ 24  }
+ 25  
+ 26  /** AC1–AC4 for ONE room, using only that room&#x27;s bookings. */</pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>21</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">C. Final version — final/src/domain/availability.js (cont.)</div><pre class="code"> 27  export function checkAvailability(room, slot, now) {
+ 28    if (!room) return { ok: false, reason: &quot;no-room&quot;, message: MESSAGES.noRoom };
+ 29    const v = validateSlot(slot, now);
+ 30    if (!v.ok) return v;
+ 31    if (room.blocked) return { ok: false, reason: &quot;blocked&quot;, message: `${room.name}
+   ↳  is blocked and cannot be booked.` };
+ 32    const conflict = room.bookings.find((b) =&gt;
+ 33      overlaps(v.startMs, v.endMs, new Date(b.start).getTime(), new Date(b.end).get
+   ↳ Time()));
+ 34    if (conflict) return { ok: false, reason: &quot;conflict&quot;, message: `${room.name} co
+   ↳ nflicts with &quot;${conflict.title}&quot; (${conflict.start.slice(11)}–${conflict.end.slic
+   ↳ e(11)}).` };
+ 35    return { ok: true, reason: &quot;available&quot;, message: `${room.name} is available.` }
+   ↳ ;
+ 36  }</pre><div class="ct">C. Final version — final/src/domain/filters.js</div><pre class="code">  1  // Room filtering rules F1–F3. Pure functions.
+  2  
+  3  /** F1: capacity &gt;= attendees. Empty/invalid attendees means &quot;no capacity require
+   ↳ ment&quot;. */
+  4  export const meetsCapacity = (room, attendees) =&gt; {
+  5    const n = Number(attendees);
+  6    return !Number.isFinite(n) || n &lt;= 0 || room.capacity &gt;= n;
+  7  };
+  8  
+  9  /** F2: room must contain ALL required items. */
+ 10  export const hasAllEquipment = (room, required = []) =&gt; required.every((item) =&gt; 
+   ↳ room.equipment.includes(item));
+ 11  
+ 12  /**
+ 13   * Rooms matching the user&#x27;s requirements. Blocked rooms stay in the list but are
+ 14   * flagged (F3: they can never be reported as available — see checkAvailability).
+ 15   */
+ 16  export function filterRooms(rooms, { attendees, equipment = [] } = {}) {
+ 17    return rooms.filter((r) =&gt; meetsCapacity(r, attendees) &amp;&amp; hasAllEquipment(r, eq
+   ↳ uipment));
+ 18  }</pre></div><div><div class="ct">C. Final version — final/src/ui/render.js</div><pre class="code">  1  // UI presentation only: turns state into DOM. One renderResult() replaces the tw
+   ↳ o copies in the baseline.
+  2  
+  3  export function renderRoomList(listEl, rooms, selectedId) {
+  4    listEl.replaceChildren();
+  5    for (const room of rooms) {
+  6      const li = listEl.ownerDocument.createElement(&quot;li&quot;);
+  7      const label = listEl.ownerDocument.createElement(&quot;label&quot;);
+  8      label.className = &quot;room&quot; + (room.blocked ? &quot; blocked&quot; : &quot;&quot;);
+  9      const radio = listEl.ownerDocument.createElement(&quot;input&quot;);
+ 10      radio.type = &quot;radio&quot;;
+ 11      radio.name = &quot;room&quot;;
+ 12      radio.value = room.id;
+ 13      radio.checked = room.id === selectedId;
+ 14      const info = listEl.ownerDocument.createElement(&quot;span&quot;);
+ 15      info.innerHTML = `&lt;strong&gt;&lt;/strong&gt; &lt;small&gt;&lt;/small&gt;`;
+ 16      info.querySelector(&quot;strong&quot;).textContent = room.name;
+ 17      info.querySelector(&quot;small&quot;).textContent =
+ 18        `${room.capacity} seats · ${room.equipment.join(&quot;, &quot;)}${room.blocked ? &quot; · 
+   ↳ BLOCKED&quot; : &quot;&quot;}`;
+ 19      label.append(radio, info);
+ 20      li.append(label);
+ 21      listEl.append(li);
+ 22    }
+ 23  }
+ 24  
+ 25  export function renderEmptyState(emptyEl, isEmpty) {
+ 26    emptyEl.hidden = !isEmpty;
+ 27  }
+ 28  
+ 29  export function renderResult(resultEl, result) {
+ 30    if (!result) {
+ 31      resultEl.className = &quot;result&quot;;
+ 32      resultEl.textContent = &quot;&quot;;
+ 33      return;
+ 34    }
+ 35    resultEl.className = `result ${result.ok ? &quot;ok&quot; : &quot;error&quot;}`;
+ 36    resultEl.dataset.reason = result.reason;</pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>22</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">C. Final version — final/src/ui/render.js (cont.)</div><pre class="code"> 37    resultEl.textContent = result.message;
+ 38  }</pre><div class="ct">C. Final version — final/src/ui/app.js</div><pre class="code">  1  // UI controller: reads the form, calls domain functions, delegates drawing to re
+   ↳ nder.js.
+  2  import { ROOMS, NOW, findRoom } from &quot;../data/rooms.js&quot;;
+  3  import { filterRooms } from &quot;../domain/filters.js&quot;;
+  4  import { checkAvailability } from &quot;../domain/availability.js&quot;;
+  5  import { renderRoomList, renderEmptyState, renderResult } from &quot;./render.js&quot;;
+  6  
+  7  export function mountApp(doc, { rooms = ROOMS, now = NOW } = {}) {
+  8    const $ = (id) =&gt; doc.getElementById(id);
+  9    const form = $(&quot;form&quot;), list = $(&quot;rooms&quot;), empty = $(&quot;empty&quot;), result = $(&quot;resu
+   ↳ lt&quot;);
+ 10    const state = { selectedId: null, checked: false };
+ 11  
+ 12    const readCriteria = () =&gt; ({
+ 13      attendees: $(&quot;attendees&quot;).value,
+ 14      equipment: [...doc.querySelectorAll(&#x27;input[name=&quot;equipment&quot;]:checked&#x27;)].map((
+   ↳ c) =&gt; c.value)
+ 15    });
+ 16    const readSlot = () =&gt; ({ date: $(&quot;date&quot;).value, start: $(&quot;start&quot;).value, end: 
+   ↳ $(&quot;end&quot;).value });
+ 17  
+ 18    function refresh() {
+ 19      const visible = filterRooms(rooms, readCriteria());
+ 20      // selected room filtered out -&gt; drop selection so we never show a stale resu
+   ↳ lt
+ 21      if (!visible.some((r) =&gt; r.id === state.selectedId)) state.selectedId = null;
+ 22      renderRoomList(list, visible, state.selectedId);
+ 23      renderEmptyState(empty, visible.length === 0);
+ 24      // F5: result always reflects the currently selected room
+ 25      if (!state.checked) return renderResult(result, null);
+ 26      const room = findRoom(rooms, state.selectedId);
+ 27      renderResult(result, checkAvailability(room, readSlot(), now));
+ 28    }
+ 29  </pre></div><div><div class="ct">C. Final version — final/src/ui/app.js (cont.)</div><pre class="code"> 30    list.addEventListener(&quot;change&quot;, (ev) =&gt; {
+ 31      if (ev.target.name === &quot;room&quot;) { state.selectedId = ev.target.value; refresh(
+   ↳ ); }
+ 32    });
+ 33    form.addEventListener(&quot;input&quot;, (ev) =&gt; {
+ 34      if (ev.target.name !== &quot;room&quot;) refresh(); // filters/time edits re-render imm
+   ↳ ediately
+ 35    });
+ 36    form.addEventListener(&quot;submit&quot;, (ev) =&gt; {
+ 37      ev.preventDefault();
+ 38      state.checked = true;
+ 39      refresh();
+ 40    });
+ 41  
+ 42    refresh();
+ 43    return { state, refresh };
+ 44  }</pre><div class="ct">C. Final version — final/index.html</div><pre class="code">  1  &lt;!doctype html&gt;
+  2  &lt;html lang=&quot;en&quot;&gt;
+  3  &lt;head&gt;
+  4  &lt;meta charset=&quot;utf-8&quot;&gt;
+  5  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  6  &lt;title&gt;Smart Campus Room Checker&lt;/title&gt;
+  7  &lt;link rel=&quot;stylesheet&quot; href=&quot;src/ui/styles.css&quot;&gt;
+  8  &lt;/head&gt;
+  9  &lt;body&gt;
+ 10  &lt;main&gt;
+ 11    &lt;h1&gt;Smart Campus Room Checker&lt;/h1&gt;
+ 12    &lt;p class=&quot;now&quot;&gt;Current time (fixed): 10 Nov 2026, 09:00&lt;/p&gt;
+ 13    &lt;form id=&quot;form&quot; novalidate&gt;
+ 14      &lt;fieldset&gt;
+ 15        &lt;legend&gt;1. Requirements&lt;/legend&gt;
+ 16        &lt;label&gt;Attendees &lt;input id=&quot;attendees&quot; type=&quot;number&quot; min=&quot;1&quot; inputmode=&quot;num
+   ↳ eric&quot; placeholder=&quot;e.g. 20&quot;&gt;&lt;/label&gt;
+ 17        &lt;div class=&quot;equipment&quot;&gt;
+ 18          &lt;label&gt;&lt;input type=&quot;checkbox&quot; name=&quot;equipment&quot; value=&quot;projector&quot;&gt; Project</pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>23</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">C. Final version — final/index.html (cont.)</div><pre class="code">   ↳ or&lt;/label&gt;
+ 19          &lt;label&gt;&lt;input type=&quot;checkbox&quot; name=&quot;equipment&quot; value=&quot;whiteboard&quot;&gt; Whiteb
+   ↳ oard&lt;/label&gt;
+ 20          &lt;label&gt;&lt;input type=&quot;checkbox&quot; name=&quot;equipment&quot; value=&quot;video-conf&quot;&gt; Video 
+   ↳ conferencing&lt;/label&gt;
+ 21          &lt;label&gt;&lt;input type=&quot;checkbox&quot; name=&quot;equipment&quot; value=&quot;computers&quot;&gt; Compute
+   ↳ rs&lt;/label&gt;
+ 22        &lt;/div&gt;
+ 23      &lt;/fieldset&gt;
+ 24      &lt;fieldset&gt;
+ 25        &lt;legend&gt;2. Choose a room&lt;/legend&gt;
+ 26        &lt;ul id=&quot;rooms&quot; class=&quot;rooms&quot;&gt;&lt;/ul&gt;
+ 27        &lt;p id=&quot;empty&quot; class=&quot;empty&quot; hidden&gt;No rooms match these requirements. Try f
+   ↳ ewer attendees or less equipment.&lt;/p&gt;
+ 28      &lt;/fieldset&gt;
+ 29      &lt;fieldset&gt;
+ 30        &lt;legend&gt;3. Time slot&lt;/legend&gt;
+ 31        &lt;div class=&quot;row&quot;&gt;
+ 32          &lt;label&gt;Date &lt;input id=&quot;date&quot; type=&quot;date&quot; value=&quot;2026-11-10&quot;&gt;&lt;/label&gt;
+ 33          &lt;label&gt;Start &lt;input id=&quot;start&quot; type=&quot;time&quot;&gt;&lt;/label&gt;
+ 34          &lt;label&gt;End &lt;input id=&quot;end&quot; type=&quot;time&quot;&gt;&lt;/label&gt;
+ 35        &lt;/div&gt;
+ 36      &lt;/fieldset&gt;
+ 37      &lt;button type=&quot;submit&quot;&gt;Check availability&lt;/button&gt;
+ 38    &lt;/form&gt;
+ 39    &lt;div id=&quot;result&quot; class=&quot;result&quot; role=&quot;status&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
+ 40  &lt;/main&gt;
+ 41  &lt;script type=&quot;module&quot;&gt;
+ 42    import { mountApp } from &quot;./src/ui/app.js&quot;;
+ 43    mountApp(document);
+ 44  &lt;/script&gt;
+ 45  &lt;/body&gt;
+ 46  &lt;/html&gt;</pre></div><div><div class="ct">C. Final version — final/src/ui/styles.css</div><pre class="code">  1  * { box-sizing: border-box; }
+  2  body { font-family: system-ui, sans-serif; margin: 0; background: #f6f7f9; color:
+   ↳  #1d2330; }
+  3  main { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+  4  h1 { font-size: 1.5rem; margin: 0 0 .25rem; }
+  5  .now { color: #5b6475; margin-top: 0; }
+  6  fieldset { border: 1px solid #d9dde5; border-radius: 10px; background: #fff; marg
+   ↳ in: 0 0 16px; padding: 12px 16px; }
+  7  legend { font-weight: 600; padding: 0 4px; }
+  8  label { display: block; margin: 6px 0; }
+  9  input[type=number], input[type=date], input[type=time] { width: 100%; padding: 8p
+   ↳ x; font-size: 1rem; border: 1px solid #c4cad6; border-radius: 6px; }
+ 10  .equipment { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,
+   ↳  1fr)); }
+ 11  .rooms { list-style: none; padding: 0; margin: 0; }
+ 12  .room { display: flex; gap: 10px; align-items: flex-start; padding: 8px; border-r
+   ↳ adius: 6px; cursor: pointer; }
+ 13  .room:hover { background: #f0f3f8; }
+ 14  .room small { display: block; color: #5b6475; }
+ 15  .room.blocked { opacity: .7; }
+ 16  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr))
+   ↳ ; gap: 8px; }
+ 17  .empty { color: #8a5a00; background: #fff6e0; padding: 10px; border-radius: 6px; 
+   ↳ }
+ 18  button { width: 100%; padding: 12px; font-size: 1rem; border: 0; border-radius: 8
+   ↳ px; background: #2950c8; color: #fff; cursor: pointer; }
+ 19  .result { margin-top: 16px; padding: 12px; border-radius: 8px; }
+ 20  .result:empty { display: none; }
+ 21  .ok { background: #e3f6e8; color: #145c2a; }
+ 22  .error { background: #fde8e8; color: #8a1c1c; }</pre><div class="ct">D. Tests — final/tests/availability.test.js</div><pre class="code">  1  // Regression tests AC1–AC5 against the REFACTORED domain module.
+  2  import test from &quot;node:test&quot;;
+  3  import assert from &quot;node:assert/strict&quot;;
+  4  import { checkAvailability } from &quot;../src/domain/availability.js&quot;;
+  5  import { ROOMS, NOW, findRoom } from &quot;../src/data/rooms.js&quot;;
+  6  </pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>24</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">D. Tests — final/tests/availability.test.js (cont.)</div><pre class="code">  7  const R301 = findRoom(ROOMS, &quot;R301&quot;); // bookings 10:00–11:00, 13:00–14:30
+  8  const slot = (start, end) =&gt; ({ date: &quot;2026-11-10&quot;, start, end });
+  9  
+ 10  test(&quot;AC1: rejects malformed time&quot;, () =&gt; {
+ 11    assert.equal(checkAvailability(R301, slot(&quot;9am&quot;, &quot;10:00&quot;), NOW).reason, &quot;invali
+   ↳ d&quot;);
+ 12  });
+ 13  test(&quot;AC1: rejects end before start&quot;, () =&gt; {
+ 14    assert.equal(checkAvailability(R301, slot(&quot;12:00&quot;, &quot;11:00&quot;), NOW).reason, &quot;orde
+   ↳ r&quot;);
+ 15  });
+ 16  test(&quot;AC1: rejects start before fixed current time (09:00)&quot;, () =&gt; {
+ 17    assert.equal(checkAvailability(R301, slot(&quot;08:00&quot;, &quot;08:30&quot;), NOW).reason, &quot;past
+   ↳ &quot;);
+ 18  });
+ 19  test(&quot;AC2 boundary: exactly 120 minutes is allowed&quot;, () =&gt; {
+ 20    assert.equal(checkAvailability(R301, slot(&quot;15:00&quot;, &quot;17:00&quot;), NOW).ok, true);
+ 21  });
+ 22  test(&quot;AC2 boundary: 121 minutes is rejected&quot;, () =&gt; {
+ 23    assert.equal(checkAvailability(R301, slot(&quot;15:00&quot;, &quot;17:01&quot;), NOW).reason, &quot;dura
+   ↳ tion&quot;);
+ 24  });
+ 25  test(&quot;AC3/F3: blocked room is never reported available, even with a free slot&quot;, (
+   ↳ ) =&gt; {
+ 26    const r = checkAvailability(findRoom(ROOMS, &quot;AUD1&quot;), slot(&quot;15:00&quot;, &quot;16:00&quot;), NO
+   ↳ W);
+ 27    assert.equal(r.ok, false);
+ 28    assert.equal(r.reason, &quot;blocked&quot;);
+ 29  });
+ 30  test(&quot;AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed&quot;, 
+   ↳ () =&gt; {
+ 31    assert.equal(checkAvailability(R301, slot(&quot;11:00&quot;, &quot;12:00&quot;), NOW).ok, true);
+ 32  });
+ 33  test(&quot;AC4 boundary: overlapping interval 10:59–11:30 is rejected&quot;, () =&gt; {
+ 34    assert.equal(checkAvailability(R301, slot(&quot;10:59&quot;, &quot;11:30&quot;), NOW).reason, &quot;conf
+   ↳ lict&quot;);
+ 35  });
+ 36  test(&quot;AC4: interval fully containing a booking is rejected&quot;, () =&gt; {</pre></div><div><div class="ct">D. Tests — final/tests/availability.test.js (cont.)</div><pre class="code"> 37    assert.equal(checkAvailability(R301, slot(&quot;12:45&quot;, &quot;14:45&quot;), NOW).reason, &quot;conf
+   ↳ lict&quot;);
+ 38  });
+ 39  test(&quot;AC5: booking data is immutable (frozen) and unchanged after checks&quot;, () =&gt; 
+   ↳ {
+ 40    const before = JSON.stringify(ROOMS);
+ 41    checkAvailability(R301, slot(&quot;10:30&quot;, &quot;11:30&quot;), NOW);
+ 42    checkAvailability(R301, slot(&quot;15:00&quot;, &quot;16:00&quot;), NOW);
+ 43    assert.equal(JSON.stringify(ROOMS), before);
+ 44    assert.throws(() =&gt; { &quot;use strict&quot;; R301.bookings.push({}); }, TypeError);
+ 45  });
+ 46  test(&quot;Room-specific data: same slot is busy in R301 but free in R210&quot;, () =&gt; {
+ 47    const s = slot(&quot;10:00&quot;, &quot;11:00&quot;);
+ 48    assert.equal(checkAvailability(R301, s, NOW).ok, false);
+ 49    assert.equal(checkAvailability(findRoom(ROOMS, &quot;R210&quot;), s, NOW).ok, true);
+ 50  });
+ 51  test(&quot;No room selected gives a clear message instead of a crash&quot;, () =&gt; {
+ 52    assert.equal(checkAvailability(null, slot(&quot;15:00&quot;, &quot;16:00&quot;), NOW).reason, &quot;no-r
+   ↳ oom&quot;);
+ 53  });</pre><div class="ct">D. Tests — final/tests/filters.test.js</div><pre class="code">  1  // New feature tests F1–F3 (pure filtering logic).
+  2  import test from &quot;node:test&quot;;
+  3  import assert from &quot;node:assert/strict&quot;;
+  4  import { filterRooms } from &quot;../src/domain/filters.js&quot;;
+  5  import { ROOMS } from &quot;../src/data/rooms.js&quot;;
+  6  
+  7  const ids = (rooms) =&gt; rooms.map((r) =&gt; r.id).sort();
+  8  
+  9  test(&quot;Catalog has at least four rooms with id, name, capacity, equipment, blocked
+   ↳ , bookings&quot;, () =&gt; {
+ 10    assert.ok(ROOMS.length &gt;= 4);
+ 11    for (const r of ROOMS) {
+ 12      assert.equal(typeof r.id, &quot;string&quot;);
+ 13      assert.equal(typeof r.name, &quot;string&quot;);
+ 14      assert.equal(typeof r.capacity, &quot;number&quot;);
+ 15      assert.ok(Array.isArray(r.equipment));</pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>25</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">D. Tests — final/tests/filters.test.js (cont.)</div><pre class="code"> 16      assert.equal(typeof r.blocked, &quot;boolean&quot;);
+ 17      assert.ok(Array.isArray(r.bookings));
+ 18    }
+ 19  });
+ 20  test(&quot;F1 boundary: exact capacity (12) keeps Seminar Room 105&quot;, () =&gt; {
+ 21    assert.ok(ids(filterRooms(ROOMS, { attendees: 12 })).includes(&quot;R105&quot;));
+ 22  });
+ 23  test(&quot;F1 boundary: insufficient capacity (13) removes Seminar Room 105&quot;, () =&gt; {
+ 24    assert.ok(!ids(filterRooms(ROOMS, { attendees: 13 })).includes(&quot;R105&quot;));
+ 25  });
+ 26  test(&quot;F1: empty attendees means no capacity restriction&quot;, () =&gt; {
+ 27    assert.equal(filterRooms(ROOMS, { attendees: &quot;&quot; }).length, ROOMS.length);
+ 28  });
+ 29  test(&quot;F2: room must contain ALL selected equipment (projector + computers -&gt; LAB2
+   ↳  only)&quot;, () =&gt; {
+ 30    assert.deepEqual(ids(filterRooms(ROOMS, { equipment: [&quot;projector&quot;, &quot;computers&quot;]
+   ↳  })), [&quot;LAB2&quot;]);
+ 31  });
+ 32  test(&quot;F2: one missing item excludes the room (whiteboard + video-conf -&gt; R105 onl
+   ↳ y)&quot;, () =&gt; {
+ 33    assert.deepEqual(ids(filterRooms(ROOMS, { equipment: [&quot;whiteboard&quot;, &quot;video-conf
+   ↳ &quot;] })), [&quot;R105&quot;]);
+ 34  });
+ 35  test(&quot;F1+F2 combined: 25 attendees + projector -&gt; R301, AUD1 (blocked shown, flag
+   ↳ ged)&quot;, () =&gt; {
+ 36    const out = filterRooms(ROOMS, { attendees: 25, equipment: [&quot;projector&quot;] });
+ 37    assert.deepEqual(ids(out), [&quot;AUD1&quot;, &quot;R301&quot;]);
+ 38    assert.equal(out.find((r) =&gt; r.id === &quot;AUD1&quot;).blocked, true);
+ 39  });
+ 40  test(&quot;F4 (logic): impossible requirements return an empty list&quot;, () =&gt; {
+ 41    assert.deepEqual(filterRooms(ROOMS, { attendees: 500 }), []);
+ 42  });</pre><div class="ct">D. Tests — final/tests/ui.test.js</div><pre class="code">  1  // Integration / UI behaviour checks: real index.html + app.js in jsdom.
+  2  import test from &quot;node:test&quot;;
+  3  import assert from &quot;node:assert/strict&quot;;
+  4  import { readFileSync } from &quot;node:fs&quot;;</pre></div><div><div class="ct">D. Tests — final/tests/ui.test.js (cont.)</div><pre class="code">  5  import { JSDOM } from &quot;jsdom&quot;;
+  6  import { mountApp } from &quot;../src/ui/app.js&quot;;
+  7  
+  8  const html = readFileSync(new URL(&quot;../index.html&quot;, import.meta.url), &quot;utf8&quot;)
+  9    .replace(/&lt;script type=&quot;module&quot;&gt;[\s\S]*?&lt;\/script&gt;/, &quot;&quot;); // mount manually bel
+   ↳ ow
+ 10  
+ 11  function setup() {
+ 12    const dom = new JSDOM(html);
+ 13    const doc = dom.window.document;
+ 14    mountApp(doc);
+ 15    const fire = (el, type) =&gt; el.dispatchEvent(new dom.window.Event(type, { bubble
+   ↳ s: true }));
+ 16    const set = (id, v) =&gt; { doc.getElementById(id).value = v; fire(doc.getElementB
+   ↳ yId(id), &quot;input&quot;); };
+ 17    const pick = (roomId) =&gt; { const r = doc.querySelector(`input[name=room][value=
+   ↳ ${roomId}]`); r.checked = true; fire(r, &quot;change&quot;); };
+ 18    const submit = () =&gt; doc.getElementById(&quot;form&quot;).dispatchEvent(new dom.window.Ev
+   ↳ ent(&quot;submit&quot;, { cancelable: true }));
+ 19    const result = () =&gt; doc.getElementById(&quot;result&quot;);
+ 20    const roomIds = () =&gt; [...doc.querySelectorAll(&quot;input[name=room]&quot;)].map((r) =&gt; 
+   ↳ r.value);
+ 21    return { doc, set, pick, submit, result, roomIds, fire };
+ 22  }
+ 23  
+ 24  test(&quot;UI: successful availability check shows green &#x27;available&#x27; feedback&quot;, () =&gt; 
+   ↳ {
+ 25    const ui = setup();
+ 26    ui.pick(&quot;R210&quot;); ui.set(&quot;start&quot;, &quot;11:00&quot;); ui.set(&quot;end&quot;, &quot;12:00&quot;); ui.submit();
+ 27    assert.equal(ui.result().className, &quot;result ok&quot;);
+ 28    assert.match(ui.result().textContent, /Study Room 210 is available/);
+ 29  });
+ 30  
+ 31  test(&quot;F5 (UI): switching room refreshes result using the new room&#x27;s bookings&quot;, ()
+   ↳  =&gt; {
+ 32    const ui = setup();
+ 33    ui.pick(&quot;R210&quot;); ui.set(&quot;start&quot;, &quot;10:00&quot;); ui.set(&quot;end&quot;, &quot;11:00&quot;); ui.submit();
+ 34    assert.equal(ui.result().dataset.reason, &quot;available&quot;);</pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>26</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">D. Tests — final/tests/ui.test.js (cont.)</div><pre class="code"> 35    ui.pick(&quot;R301&quot;); // R301 has a 10:00–11:00 lecture
+ 36    assert.equal(ui.result().dataset.reason, &quot;conflict&quot;);
+ 37    assert.match(ui.result().textContent, /Algorithms lecture/);
+ 38  });
+ 39  
+ 40  test(&quot;F4 (UI): clear empty state when no rooms match; selection and result cleare
+   ↳ d&quot;, () =&gt; {
+ 41    const ui = setup();
+ 42    ui.pick(&quot;R301&quot;); ui.set(&quot;start&quot;, &quot;15:00&quot;); ui.set(&quot;end&quot;, &quot;16:00&quot;); ui.submit();
+ 43    assert.equal(ui.result().dataset.reason, &quot;available&quot;);
+ 44    ui.set(&quot;attendees&quot;, &quot;500&quot;);
+ 45    assert.equal(ui.roomIds().length, 0);
+ 46    assert.equal(ui.doc.getElementById(&quot;empty&quot;).hidden, false);
+ 47    assert.equal(ui.result().dataset.reason, &quot;no-room&quot;);
+ 48  });
+ 49  
+ 50  test(&quot;F1/F2 (UI): filters update the visible room list&quot;, () =&gt; {
+ 51    const ui = setup();
+ 52    assert.equal(ui.roomIds().length, 5);
+ 53    const cb = ui.doc.querySelector(&#x27;input[name=equipment][value=computers]&#x27;);
+ 54    cb.checked = true; ui.fire(cb, &quot;input&quot;);
+ 55    assert.deepEqual(ui.roomIds(), [&quot;LAB2&quot;]);
+ 56  });
+ 57  
+ 58  test(&quot;AC6 (UI): invalid slot gives clear error text; layout has responsive viewpo
+   ↳ rt&quot;, () =&gt; {
+ 59    const ui = setup();
+ 60    ui.pick(&quot;R301&quot;); ui.set(&quot;start&quot;, &quot;15:00&quot;); ui.set(&quot;end&quot;, &quot;17:30&quot;); ui.submit();
+ 61    assert.equal(ui.result().className, &quot;result error&quot;);
+ 62    assert.match(ui.result().textContent, /120 minutes/);
+ 63    assert.match(ui.doc.querySelector(&#x27;meta[name=viewport]&#x27;).content, /width=device
+   ↳ -width/);
+ 64  });</pre></div><div><div class="ct">E. Test results — npm run test:baseline (actual output)</div><pre class="code">  1  ✔ AC1: rejects end before start (0.80313ms)
+  2  ✔ AC1: rejects start in the past (before fixed now 09:00) (0.089563ms)
+  3  ✔ AC2: exactly 120 minutes is allowed (0.101588ms)
+  4  ✔ AC2: 121 minutes is rejected (0.066285ms)
+  5  ✔ AC3: blocked room is never available (0.068814ms)
+  6  ✔ AC4: touching interval (11:00-12:00 after 10:00-11:00) is allowed (0.060961ms)
+  7  ✔ AC4: overlapping interval (10:30-11:30) is rejected (0.096111ms)
+  8  ✔ AC5: checking availability does not mutate booking data (0.188559ms)
+  9  ℹ tests 8
+ 10  ℹ suites 0
+ 11  ℹ pass 8
+ 12  ℹ fail 0
+ 13  ℹ cancelled 0
+ 14  ℹ skipped 0
+ 15  ℹ todo 0
+ 16  ℹ duration_ms 47.269087</pre><div class="ct">E. Test results — npm test (actual output)</div><pre class="code">  1  
+  2  &gt; smart-campus-room-checker@2.0.0 test
+  3  &gt; node --test --test-reporter=spec final/tests/*.test.js
+  4  
+  5  ✔ AC1: rejects malformed time (1.562192ms)
+  6  ✔ AC1: rejects end before start (0.276426ms)
+  7  ✔ AC1: rejects start before fixed current time (09:00) (0.077566ms)
+  8  ✔ AC2 boundary: exactly 120 minutes is allowed (0.09723ms)
+  9  ✔ AC2 boundary: 121 minutes is rejected (0.070816ms)
+ 10  ✔ AC3/F3: blocked room is never reported available, even with a free slot (0.0803
+   ↳ 09ms)
+ 11  ✔ AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed (0.059
+   ↳ 021ms)
+ 12  ✔ AC4 boundary: overlapping interval 10:59–11:30 is rejected (0.058364ms)
+ 13  ✔ AC4: interval fully containing a booking is rejected (0.21555ms)
+ 14  ✔ AC5: booking data is immutable (frozen) and unchanged after checks (0.447779ms)
+ 15  ✔ Room-specific data: same slot is busy in R301 but free in R210 (0.103455ms)
+ 16  ✔ No room selected gives a clear message instead of a crash (0.047375ms)
+ 17  ✔ Catalog has at least four rooms with id, name, capacity, equipment, blocked, bo
+   ↳ okings (1.280383ms)</pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>27</span></div></section>
+<section class="slide appx"><div class="tag">Appendix · source code, tests and results</div>
+<div class="acols"><div><div class="ct">E. Test results — npm test (actual output) (cont.)</div><pre class="code"> 18  ✔ F1 boundary: exact capacity (12) keeps Seminar Room 105 (0.448635ms)
+ 19  ✔ F1 boundary: insufficient capacity (13) removes Seminar Room 105 (1.560365ms)
+ 20  ✔ F1: empty attendees means no capacity restriction (0.118358ms)
+ 21  ✔ F2: room must contain ALL selected equipment (projector + computers -&gt; LAB2 onl
+   ↳ y) (0.542921ms)
+ 22  ✔ F2: one missing item excludes the room (whiteboard + video-conf -&gt; R105 only) (
+   ↳ 0.107335ms)
+ 23  ✔ F1+F2 combined: 25 attendees + projector -&gt; R301, AUD1 (blocked shown, flagged)
+   ↳  (0.090493ms)
+ 24  ✔ F4 (logic): impossible requirements return an empty list (0.057142ms)
+ 25  ✔ UI: successful availability check shows green &#x27;available&#x27; feedback (62.566138ms
+   ↳ )
+ 26  ✔ F5 (UI): switching room refreshes result using the new room&#x27;s bookings (24.1895
+   ↳ 47ms)
+ 27  ✔ F4 (UI): clear empty state when no rooms match; selection and result cleared (1
+   ↳ 5.332797ms)
+ 28  ✔ F1/F2 (UI): filters update the visible room list (11.144669ms)
+ 29  ✔ AC6 (UI): invalid slot gives clear error text; layout has responsive viewport (
+   ↳ 15.105089ms)
+ 30  ℹ tests 25
+ 31  ℹ suites 0
+ 32  ℹ pass 25
+ 33  ℹ fail 0
+ 34  ℹ cancelled 0
+ 35  ℹ skipped 0
+ 36  ℹ todo 0
+ 37  ℹ duration_ms 484.173971</pre><div class="ct">E. Mutation check 1 — overlaps() &lt; → &lt;=</div><pre class="code">  1  ✖ AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed (0.619
+   ↳ 781ms)
+  2  ℹ pass 24
+  3  ℹ fail 1
+  4  ✖ failing tests:
+  5  ✖ AC4 boundary: touching interval 11:00–12:00 after 10:00–11:00 is allowed (0.619
+   ↳ 781ms)</pre></div><div><div class="ct">E. Mutation check 2 — every → some</div><pre class="code">  1  ✖ F1 boundary: exact capacity (12) keeps Seminar Room 105 (7.928931ms)
+  2  ✖ F1: empty attendees means no capacity restriction (0.528013ms)
+  3  ✖ F2: room must contain ALL selected equipment (projector + computers -&gt; LAB2 onl
+   ↳ y) (1.041323ms)
+  4  ✖ F2: one missing item excludes the room (whiteboard + video-conf -&gt; R105 only) (
+   ↳ 0.371293ms)
+  5  ✖ UI: successful availability check shows green &#x27;available&#x27; feedback (44.930247ms
+   ↳ )</pre><div class="ct">E. Git history — git log --oneline</div><pre class="code">  1  a78e2e9 Final: room catalog, F1-F5 filtering, refactor into data/domain/ui module
+   ↳ s, 25 tests
+  2  535bb88 Baseline: fix test script
+  3  48bd593 Baseline: single-room prototype (Assignment #03) + AC regression tests</pre></div></div>
+<div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>28</span></div></section><!-- APPENDIX END -->
 </body>
 </html>
