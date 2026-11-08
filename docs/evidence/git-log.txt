@@ -1,0 +1,3 @@
+a78e2e9 Final: room catalog, F1-F5 filtering, refactor into data/domain/ui modules, 25 tests
+535bb88 Baseline: fix test script
+48bd593 Baseline: single-room prototype (Assignment #03) + AC regression tests

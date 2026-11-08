@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Assignment 04 — Yeraliyeva Anel</title>
+<style>
+  @page { size: 1280px 720px; margin: 0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Helvetica Neue", Arial, sans-serif; color: #1d2330; }
+  .slide { width: 1280px; height: 720px; padding: 52px 64px 40px; page-break-after: always; position: relative; overflow: hidden; background: #fff; }
+  .slide:last-child { page-break-after: auto; }
+  .tag { font-size: 15px; font-weight: 700; color: #2950c8; letter-spacing: .06em; text-transform: uppercase; }
+  h1 { font-size: 38px; margin: 6px 0 22px; line-height: 1.15; }
+  h2 { font-size: 21px; margin: 14px 0 8px; color: #2950c8; }
+  p, li { font-size: 19px; line-height: 1.45; }
+  ul { margin: 6px 0; padding-left: 24px; }
+  li { margin: 4px 0; }
+  code, .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: .88em; background: #f0f3f8; padding: 1px 5px; border-radius: 4px; }
+  pre { font-family: Menlo, Consolas, monospace; font-size: 14px; background: #111827; color: #e5e7eb; padding: 14px 18px; border-radius: 10px; line-height: 1.45; margin: 8px 0; white-space: pre-wrap; }
+  table { border-collapse: collapse; width: 100%; font-size: 16px; }
+  th, td { border: 1px solid #d9dde5; padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: #f0f3f8; }
+  .foot { position: absolute; bottom: 18px; left: 64px; right: 64px; display: flex; justify-content: space-between; font-size: 13px; color: #8a92a3; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  .cols3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .card { border: 1px solid #d9dde5; border-radius: 12px; padding: 14px 18px; background: #fafbfd; }
+  .card h3 { margin: 0 0 6px; font-size: 18px; }
+  .card p, .card li { font-size: 16px; }
+  .ok { color: #145c2a; font-weight: 700; }
+  .bad { color: #8a1c1c; font-weight: 700; }
+  img.shot { border: 1px solid #d9dde5; border-radius: 8px; width: 100%; height: 470px; object-fit: cover; object-position: top; }
+  .cap { font-size: 14px; color: #5b6475; margin-top: 6px; }
+  .title { background: linear-gradient(135deg, #1e3a8a, #2950c8); color: #fff; display: flex; flex-direction: column; justify-content: center; }
+  .title h1 { font-size: 52px; margin-bottom: 10px; }
+  .title .sub { font-size: 24px; opacity: .9; margin: 0 0 44px; }
+  .title table { width: auto; font-size: 22px; }
+  .title td { border: 0; padding: 6px 28px 6px 0; color: #fff; }
+  .title td:first-child { opacity: .75; }
+  .small p, .small li { font-size: 16.5px; }
+  .reflect p { font-size: 16.5px; line-height: 1.5; margin: 0 0 10px; }
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="slide title">
+  <div class="tag" style="color:#c7d4ff">Software Engineering · Assignment #04</div>
+  <h1>AI-assisted evolution of the<br>Smart Campus Room Availability Checker</h1>
+  <p class="sub">Refactoring, room-catalog feature extension and automated quality evidence</p>
+  <table>
+    <tr><td>Full name</td><td><b>Yeraliyeva Anel</b></td></tr>
+    <tr><td>Student ID</td><td><b>24B031020</b></td></tr>
+    <tr><td>Practice lessons</td><td><b>Tuesday, 18:00 – 19:00</b></td></tr>
+    <tr><td>AI assistant used</td><td><b>Claude (Anthropic), model Claude Opus 5.5</b></td></tr>
+    <tr><td>Date</td><td>8 November 2026</td></tr>
+  </table>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="tag">Starting point and scope</div>
+  <h1>Baseline: one room, one file</h1>
+  <div class="cols">
+    <div>
+      <p>The Assignment #03 prototype was reconstructed as an equivalent minimal version and committed first (<code>48bd593</code>) so every later change has a recorded baseline.</p>
+      <ul>
+        <li><code>baseline/app.js</code> — 94 lines: room data, rules and DOM handlers together</li>
+        <li>One room (<i>Room 301</i>), two fictional bookings</li>
+        <li>Fixed current time <b>2026-11-10 09:00</b></li>
+        <li>No login, payments, live APIs or database</li>
+        <li>Baseline AC regression suite: <span class="ok">8 / 8 passed</span></li>
+      </ul>
+    </div>
+    <div>
+      <table>
+        <tr><th>ID</th><th>Acceptance criterion (preserved)</th></tr>
+        <tr><td>AC1</td><td>Valid HH:MM, end after start, not in the past</td></tr>
+        <tr><td>AC2</td><td>Max 120 minutes (120 ok, 121 rejected)</td></tr>
+        <tr><td>AC3</td><td>Blocked room cannot be booked</td></tr>
+        <tr><td>AC4</td><td>Overlap rejected, touching intervals allowed</td></tr>
+        <tr><td>AC5</td><td>Booking data is never mutated</td></tr>
+        <tr><td>AC6</td><td>Clear, responsive feedback</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>2</span></div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="tag">Task 01 · Codebase analysis</div>
+  <h1>Structured context given to the AI assistant</h1>
+  <div class="cols">
+    <div>
+      <h2>Repository map (as provided)</h2>
+<pre>baseline/
+  index.html     form: date, start, end
+  app.js         room data, NOW, checkAvailability(),
+                 submit + change handlers
+  tests/         AC1–AC5 regression checks</pre>
+      <h2>Constraints stated explicitly</h2>
+      <ul class="small">
+        <li>Fictional data only; no login / payments / APIs / DB</li>
+        <li>Do not change AC1–AC6 behaviour</li>
+        <li>Small plan first, one change at a time — no full rewrite</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Requirements stated explicitly</h2>
+      <ul class="small">
+        <li>AC1–AC6 (previous slide), with boundary values</li>
+        <li>New: ≥ 4 rooms (id, name, capacity, equipment, blocked, bookings)</li>
+        <li>F1 capacity ≥ attendees · F2 ALL equipment · F3 blocked never available · F4 empty state · F5 room switch refreshes result</li>
+        <li>≥ 10 executable tests incl. 120/121 min, touching/overlap, exact/insufficient capacity, one UI check</li>
+      </ul>
+      <h2>Source of the context</h2>
+      <p class="small" style="font-size:16.5px">The assignment brief (Lesson 08 slides) and the submission instructions were given to the assistant verbatim, together with the baseline file.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>3</span></div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="tag">Task 01 · Codebase analysis</div>
+  <h1>Maintainability risks found in the baseline</h1>
+  <table>
+    <tr><th style="width:4%">#</th><th style="width:26%">Risk</th><th style="width:34%">Evidence (file / function / line)</th><th>Why it matters for this change</th></tr>
+    <tr><td>R1</td><td><b>Hard-wired single room</b></td><td><code>app.js:6</code> global <code>room</code>; <code>checkAvailability()</code> line 16 <code>r = r || room</code></td><td>Silent fallback to Room 301 — exactly the "checked another room's data" bug the new feature must avoid</td></tr>
+    <tr><td>R2</td><td><b>Duplicated time validation</b></td><td>Same HH:MM regex in <code>checkAvailability()</code> l.18, submit handler l.65, change handler l.80</td><td>Three places to update; message text also copied 2×</td></tr>
+    <tr><td>R3</td><td><b>Duplicated result rendering</b></td><td><code>out.className = res.ok ? …</code> at l.71 and l.86</td><td>New states (blocked, empty, no room) would need edits in both handlers</td></tr>
+    <tr><td>R4</td><td><b>Mixed responsibilities</b></td><td>Data (l.3–13), rules (l.15–52) and DOM (l.55–91) in one file</td><td>Rules cannot be tested without guarding for <code>document</code>; UI cannot be tested at all</td></tr>
+    <tr><td>R5</td><td><b>Mutable booking data</b></td><td><code>room.bookings</code> is a plain array (l.9)</td><td>AC5 holds only by convention; any future code could <code>push</code> into it</td></tr>
+  </table>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>4</span></div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="tag">Task 01 · Codebase analysis</div>
+  <h1>Prioritised plan (agreed before editing) and a rejected suggestion</h1>
+  <div class="cols">
+    <div>
+      <table class="small">
+        <tr><th>P</th><th>Step</th><th>Fixes</th></tr>
+        <tr><td>1</td><td>Freeze baseline in Git + AC regression tests</td><td>safety net</td></tr>
+        <tr><td>2</td><td>Extract <code>time.js</code> (parse, overlap)</td><td>R2</td></tr>
+        <tr><td>3</td><td><code>availability.js</code>: room passed explicitly, no default</td><td>R1, R4</td></tr>
+        <tr><td>4</td><td><code>rooms.js</code> catalog, deep-frozen</td><td>R1, R5</td></tr>
+        <tr><td>5</td><td><code>filters.js</code> for F1–F3</td><td>new</td></tr>
+        <tr><td>6</td><td><code>render.js</code> + <code>app.js</code> controller</td><td>R3, R4</td></tr>
+        <tr><td>7</td><td>Run all tests + review diff after each step</td><td>—</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Rejected: "hide blocked rooms from the list"</h3>
+        <p>The simplest way to satisfy F3 was to filter blocked rooms out entirely. Rejected: a user looking for the Main Auditorium would not know <i>why</i> it is missing. Instead the room stays visible with a <b>BLOCKED</b> label, and F3 is enforced where it matters — <code>checkAvailability()</code> returns <code>reason: "blocked"</code>. Covered by test <i>AC3/F3</i>.</p>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Modified: input handler in <code>ui/app.js</code></h3>
+        <p>The first generated handler re-validated the slot before deciding whether to refresh — a second copy of AC1 logic, re-creating risk R2. On diff review it was reduced to a single <code>refresh()</code> call; all 25 tests still pass.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>5</span></div>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="tag">Task 02 · Feature extension</div>
+  <h1>Room catalog and filtering rules</h1>
+  <div class="cols" style="grid-template-columns: 1.25fr 1fr;">
+    <div>
+      <table class="small">
+        <tr><th>ID</th><th>Name</th><th>Cap.</th><th>Equipment</th><th>Blocked</th><th>Bookings (10 Nov)</th></tr>
+        <tr><td>R301</td><td>Room 301</td><td>30</td><td>projector, whiteboard</td><td>no</td><td>10:00–11:00, 13:00–14:30</td></tr>
+        <tr><td>R105</td><td>Seminar Room 105</td><td>12</td><td>whiteboard, video-conf</td><td>no</td><td>11:00–12:00</td></tr>
+        <tr><td>LAB2</td><td>Computer Lab 2</td><td>24</td><td>projector, computers, whiteboard</td><td>no</td><td>09:00–10:30</td></tr>
+        <tr><td>AUD1</td><td>Main Auditorium</td><td>120</td><td>projector, video-conf</td><td><b>yes</b></td><td>—</td></tr>
+        <tr><td>R210</td><td>Study Room 210</td><td>6</td><td>whiteboard</td><td>no</td><td>—</td></tr>
+      </table>
+      <p class="cap">All data fictional, defined in <code>final/src/data/rooms.js</code>, deep-frozen with <code>Object.freeze</code>.</p>
+    </div>
+    <div>
+      <ul class="small">
+        <li><b>F1</b> <code>meetsCapacity()</code>: <code>capacity &gt;= attendees</code>; empty input = no requirement</li>
+        <li><b>F2</b> <code>hasAllEquipment()</code>: <code>required.every(...)</code></li>
+        <li><b>F3</b> blocked rooms listed but flagged; <code>checkAvailability()</code> never returns ok for them</li>
+        <li><b>F4</b> "No rooms match these requirements…" message; selection and result cleared</li>
+        <li><b>F5</b> every room change calls <code>refresh()</code>, which re-checks with <i>that</i> room's bookings via <code>findRoom()</code></li>
+        <li>AC1–AC4 logic unchanged in meaning, now in <code>validateSlot()</code> + <code>checkAvailability(room, slot, now)</code></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>6</span></div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="tag">Task 02 · Demonstration</div>
+  <h1>Successful check, then switching room (F5)</h1>
+  <div class="cols">
+    <div><img class="shot" src="img/01_success_R210.png"><p class="cap">Study Room 210, 10:00–11:00 → available (green).</p></div>
+    <div><img class="shot" src="img/02_switch_R301_conflict.png" style="object-position: center 60%"><p class="cap">Same slot, switched to Room 301 → result refreshes automatically: conflict with "Algorithms lecture".</p></div>
+  </div>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>7</span></div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="tag">Task 02 · Demonstration</div>
+  <h1>Filtering, empty state, blocked room, 121 minutes on mobile</h1>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+    <div><img class="shot" src="img/03_filter_equipment.png" style="height:440px"><p class="cap">F2: projector + computers → only Computer Lab 2.</p></div>
+    <div><img class="shot" src="img/04_empty_state.png" style="height:440px"><p class="cap">F4: 500 attendees → clear empty-state message.</p></div>
+    <div><img class="shot" src="img/05_blocked.png" style="height:440px;object-position:bottom"><p class="cap">F3: Main Auditorium, free slot → still "blocked".</p></div>
+    <div><img class="shot" src="img/06_mobile_121min.png" style="height:440px;object-position:bottom"><p class="cap">AC2/AC6: 15:00–17:01 at 390 px width → error, layout reflows.</p></div>
+  </div>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>8</span></div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="tag">Task 03 · Refactoring</div>
+  <h1>Before / after module diagram</h1>
+  <div class="cols" style="grid-template-columns: 1fr 1.7fr; align-items:center">
+    <div style="text-align:center"><p><b>Before</b> — 1 module</p><img src="img/before.svg" style="max-width:100%;max-height:420px"></div>
+    <div style="text-align:center"><p><b>After</b> — 6 modules in 3 layers</p><img src="img/after.svg" style="max-width:100%;max-height:470px"></div>
+  </div>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>9</span></div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="tag">Task 03 · Refactoring</div>
+  <h1>Design decisions and their justification</h1>
+  <div class="cols">
+    <div class="card"><h3>D1. Pure domain layer, room passed explicitly</h3>
+      <p><code>checkAvailability(room, slot, now)</code> has no default room and no DOM access. The baseline fallback <code>r = r || room</code> (R1) is gone, so it is impossible to check a slot against another room's bookings by accident. Purity also lets 20 of the 25 tests run in under 2 ms each without a browser.</p></div>
+    <div class="card"><h3>D2. Single time module with half-open intervals</h3>
+      <p><code>time.js</code> owns HH:MM parsing and <code>overlaps(a,b) = aStart &lt; bEnd &amp;&amp; bStart &lt; aEnd</code>. One definition replaces three regex copies (R2) and makes the touching-vs-overlap rule explicit. A mutation to <code>&lt;=</code> is caught by the AC4 boundary test.</p></div>
+    <div class="card"><h3>D3. Deep-frozen catalog</h3>
+      <p>AC5 is now enforced by the runtime instead of convention (R5): any write to a booking throws <code>TypeError</code> in strict mode, asserted in the AC5 test.</p></div>
+    <div class="card"><h3>D4. One render path, controller owns state</h3>
+      <p><code>render.js</code> has one <code>renderResult()</code> (R3). <code>app.js</code> keeps <code>selectedId</code>; when filters hide the selected room it is cleared, so a stale result is never shown (F4/F5).</p></div>
+  </div>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>10</span></div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="tag">Task 04 · Automated testing</div>
+  <h1>25 executable tests — Node built-in test runner + jsdom</h1>
+  <table class="small">
+    <tr><th style="width:18%">File</th><th style="width:7%">Tests</th><th>Covers</th></tr>
+    <tr><td><code>availability.test.js</code></td><td>12</td><td>AC1 (malformed, end&lt;start, past) · <b>AC2 120 vs 121 min</b> · AC3/F3 blocked · <b>AC4 touching 11:00 vs overlapping 10:59</b>, containing · AC5 frozen &amp; unchanged · same slot busy in R301 / free in R210 · no room selected</td></tr>
+    <tr><td><code>filters.test.js</code></td><td>8</td><td>catalog shape (≥4 rooms, all fields) · <b>F1 exact capacity 12 vs 13</b> · empty attendees · F2 ALL items (2 cases) · F1+F2 combined · F4 empty list</td></tr>
+    <tr><td><code>ui.test.js</code></td><td>5</td><td><b>Integration/UI</b> on real <code>index.html</code> in jsdom: success feedback · <b>F5 room switch refresh</b> · F4 empty state · F1/F2 list update · AC6 error text + viewport</td></tr>
+    <tr><td><code>baseline.test.js</code></td><td>8</td><td>AC1–AC5 against the original <code>baseline/app.js</code> (regression reference)</td></tr>
+  </table>
+  <h2>Commands actually run (8 Nov 2026, Node v22.23.4)</h2>
+<pre>$ npm install                 # jsdom@24 dev dependency
+$ npm run test:baseline       # node --test --test-reporter=spec baseline/tests/*.test.js
+$ npm test                    # node --test --test-reporter=spec final/tests/*.test.js</pre>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>11</span></div>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <div class="tag">Task 04 · Automated testing</div>
+  <h1>Results and checking that the tests can fail</h1>
+  <div class="cols">
+    <div>
+<pre>✔ AC2 boundary: exactly 120 minutes is allowed
+✔ AC2 boundary: 121 minutes is rejected
+✔ AC4 boundary: touching interval 11:00–12:00 … allowed
+✔ AC4 boundary: overlapping interval 10:59–11:30 rejected
+✔ F1 boundary: exact capacity (12) keeps Seminar Room 105
+✔ F1 boundary: insufficient capacity (13) removes …
+✔ F5 (UI): switching room refreshes result …
+✔ F4 (UI): clear empty state when no rooms match …
+  … (25 lines total, see docs/evidence/)
+ℹ tests 25
+ℹ pass 25
+ℹ fail 0</pre>
+      <p>Baseline suite: <span class="ok">8 / 8</span> · Final suite: <span class="ok">25 / 25</span></p>
+    </div>
+    <div>
+      <h2>Mutation checks (deliberate bugs, then reverted)</h2>
+      <table class="small">
+        <tr><th>Injected bug</th><th>Result</th></tr>
+        <tr><td><code>overlaps()</code>: <code>&lt;</code> → <code>&lt;=</code> (touching = overlap)</td><td><span class="bad">24 pass / 1 fail</span> — AC4 touching test</td></tr>
+        <tr><td><code>hasAllEquipment()</code>: <code>every</code> → <code>some</code></td><td><span class="bad">16 pass / 9 fail</span> — F1, F2 and UI tests</td></tr>
+      </table>
+      <p class="small" style="font-size:16px">Both bugs were detected, so the suite checks behaviour rather than just running code. Output saved in <code>docs/evidence/mutation1.txt</code>, <code>mutation2.txt</code>.</p>
+      <h2>Problem found while testing</h2>
+      <p class="small" style="font-size:16px"><code>node --test baseline/tests/</code> failed on Node 22 ("Cannot find module") — a directory is not accepted. Fixed with a file glob in <code>package.json</code>.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>12</span></div>
+</section>
+
+<!-- 13 -->
+<section class="slide">
+  <div class="tag">Task 05 · Quality evaluation</div>
+  <h1>Original vs final — evidence table</h1>
+  <table class="small">
+    <tr><th style="width:22%">Measure</th><th style="width:20%">Original (baseline)</th><th style="width:22%">Final</th><th>How it was obtained</th></tr>
+    <tr><td>Automated tests passed / total</td><td>8 / 8 (AC1–AC5 only)</td><td>25 / 25 (AC1–AC6, F1–F5, UI)</td><td><code>npm run test:baseline</code>, <code>npm test</code>; summary lines in <code>docs/evidence/*-output.txt</code></td></tr>
+    <tr><td>Duplicated logic locations removed</td><td>HH:MM check ×3, result render ×2</td><td>×1 and ×1 → <b>3 removed</b></td><td><code>grep -c '\d{2}:\d{2}' baseline/app.js</code> = 3; <code>grep -c 'out.className = res.ok'</code> = 2; final <code>grep -rc 'HHMM.test\|className = `result'</code> = 1 each</td></tr>
+    <tr><td>Code structure</td><td>1 module (94 lines): data + rules + DOM</td><td>6 modules (194 lines): data · time · availability · filters · render · controller</td><td><code>wc -l</code>; responsibilities from the module diagram (slide 9)</td></tr>
+    <tr><td>UI behaviour testable?</td><td>No (handlers inside <code>DOMContentLoaded</code>)</td><td>Yes — <code>mountApp(document)</code>, 5 jsdom tests</td><td>Presence of executable UI tests</td></tr>
+    <tr><td>Remaining limitations</td><td colspan="3">
+      • Single fixed date/time; bookings cannot be created, only checked · • Equipment names are free strings — no validation that a room's list uses the <code>EQUIPMENT</code> vocabulary ·
+      • Times use the browser's local time zone · • UI tests use jsdom, not a real browser (layout only checked manually via screenshots) · • No overnight (cross-midnight) slots</td></tr>
+  </table>
+  <p class="cap">Line counts are a size indicator, not a quality score: the final code is larger because it implements five new requirements.</p>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>13</span></div>
+</section>
+
+<!-- 14 -->
+<section class="slide reflect">
+  <div class="tag">Task 06 · AI reflection</div>
+  <h1>Reflection on working with the AI assistant</h1>
+  <p><b>Context.</b> I gave Claude the full Assignment #04 brief, the submission instructions and the baseline single-room code, with the acceptance criteria AC1–AC6, the new rules F1–F5 and the constraints: fictional data only, no login, APIs or database, and no full rewrite. Stating the boundary values explicitly (120/121 minutes, touching vs overlapping, exact vs insufficient capacity) produced tests aimed at the risky edges instead of generic happy paths.</p>
+  <p><b>Useful and incorrect suggestions.</b> The most useful output was the risk list, especially the hidden default room in <code>checkAvailability()</code>, which would have let the multi-room version check the wrong room's bookings. Not everything was right: the first input handler duplicated slot validation, recreating the problem the refactor was meant to remove, and the first test script used a directory path that Node 22 rejects. I also rejected hiding blocked rooms, because users would not understand why a room disappeared.</p>
+  <p><b>What I verified.</b> I ran both test suites and read the output, injected two deliberate bugs to confirm the tests fail, opened the app and checked each scenario on the screenshots, and recounted the duplication metrics with grep instead of trusting estimates.</p>
+  <p><b>Influence of tests.</b> Writing the baseline regression suite before refactoring meant every structural change could be accepted or rejected on evidence. The mutation checks showed the AC4 boundary test is the only guard for touching intervals, so I kept it as a named boundary case.</p>
+  <p><b>Next.</b> I would add real-browser end-to-end tests, validate equipment names against one vocabulary, and support creating bookings with immutable updates.</p>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>14</span></div>
+</section>
+
+<!-- 15 -->
+<section class="slide">
+  <div class="tag">AI-use record</div>
+  <h1>AI evidence appendix</h1>
+  <table class="small" style="font-size:14.5px">
+    <tr><th style="width:12%">Tool / date</th><th style="width:20%">Prompt summary</th><th style="width:20%">Output used</th><th style="width:18%">Problems found</th><th style="width:15%">Changes made</th><th>Verification</th></tr>
+    <tr><td>Claude Opus 5.5 (Anthropic), claude.ai · 8 Nov 2026</td><td>Assignment brief + instructions + baseline code; asked for risk analysis and a small step-by-step plan</td><td>Risks R1–R5, 7-step plan (slides 4–5)</td><td>None blocking; plan initially hid blocked rooms</td><td>Kept blocked rooms visible, flagged</td><td>Line references checked against <code>baseline/app.js</code></td></tr>
+    <tr><td>same session</td><td>Implement catalog + F1–F5 one module at a time, keep AC1–AC6</td><td><code>rooms.js, time.js, availability.js, filters.js, render.js, app.js</code></td><td>Input handler duplicated AC1 validation</td><td>Simplified to single <code>refresh()</code></td><td>25/25 tests; diff review; screenshots</td></tr>
+    <tr><td>same session</td><td>Write ≥10 tests incl. listed boundaries + one UI check</td><td>3 test files, 25 tests; baseline suite 8 tests</td><td>Test script path failed on Node 22</td><td>Glob in <code>package.json</code></td><td>Commands re-run, output saved</td></tr>
+    <tr><td>same session</td><td>Confirm tests detect real defects</td><td>Two mutation runs</td><td>—</td><td>Mutations reverted</td><td>24/25 and 16/25 when mutated; 25/25 after revert</td></tr>
+    <tr><td>same session</td><td>Draft README and this report</td><td>README, slides, diagrams (Graphviz)</td><td>—</td><td>Reviewed and edited</td><td>Metrics recomputed with <code>grep</code> / <code>wc</code></td></tr>
+  </table>
+  <p class="cap">Verification sources: test runner output (<code>docs/evidence/</code>), Git history (<code>48bd593 → a78e2e9</code>), headless-Chrome screenshots, Node.js docs for <code>node --test</code> and <code>Object.freeze</code>.</p>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>15</span></div>
+</section>
+
+<!-- 16 -->
+<section class="slide">
+  <div class="tag">Submission</div>
+  <h1>Deliverables and checklist</h1>
+  <div class="cols">
+    <div>
+<pre>smart-campus/
+├─ README.md            setup · run · test
+├─ package.json         npm test / test:baseline
+├─ baseline/            initial version + 8 tests
+├─ final/
+│  ├─ index.html
+│  ├─ src/data|domain|ui
+│  └─ tests/            25 tests
+└─ docs/
+   ├─ report.pdf        this report
+   ├─ img/              screenshots, diagrams
+   └─ evidence/         test outputs, mutations, git log</pre>
+      <p class="small" style="font-size:16px">Git: <code>48bd593</code> baseline → <code>a78e2e9</code> final.</p>
+    </div>
+    <div>
+      <table class="small">
+        <tr><th>Checklist item</th><th>Status</th></tr>
+        <tr><td>Existing availability rules still work</td><td class="ok">✔ AC1–AC6 tests</td></tr>
+        <tr><td>At least four fictional rooms</td><td class="ok">✔ 5 rooms</td></tr>
+        <tr><td>Capacity and equipment filters work</td><td class="ok">✔ F1/F2 tests</td></tr>
+        <tr><td>At least ten executable tests</td><td class="ok">✔ 25 (+8 baseline)</td></tr>
+        <tr><td>Refactoring and evaluation evidence</td><td class="ok">✔ slides 9–13</td></tr>
+        <tr><td>AI use and human review documented</td><td class="ok">✔ slides 5, 14, 15</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>Yeraliyeva Anel · 24B031020</span><span>16</span></div>
+</section>
+
+</body>
+</html>

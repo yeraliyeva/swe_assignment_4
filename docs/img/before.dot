@@ -1,0 +1,4 @@
+digraph G { rankdir=TB; bgcolor="transparent"; node[shape=box,style="rounded,filled",fontname="Helvetica",fontsize=12];
+ html[label="index.html",fillcolor="#e8eefc"];
+ app[label="app.js  (94 lines)\l• room data (1 room)\l• NOW constant\l• checkAvailability(): AC1–AC4\l• submit handler: time regex + render\l• change handler: time regex + render\l",fillcolor="#fde8e8"];
+ html->app[label=" <script>"];}

@@ -1,0 +1,6 @@
+digraph G { rankdir=TB; bgcolor="transparent"; node[shape=box,style="rounded,filled",fontname="Helvetica",fontsize=12]; edge[fontname="Helvetica",fontsize=10];
+ html[label="index.html",fillcolor="#e8eefc"];
+ subgraph cluster_ui{label="UI layer";style="rounded,dashed";fontname="Helvetica"; app[label="ui/app.js\ncontroller: events, state",fillcolor="#fff6e0"]; render[label="ui/render.js\nroom list, empty state, result",fillcolor="#fff6e0"];}
+ subgraph cluster_dom{label="Domain (pure, no DOM)";style="rounded,dashed";fontname="Helvetica"; avail[label="domain/availability.js\nAC1–AC4 for one room",fillcolor="#e3f6e8"]; filt[label="domain/filters.js\nF1 capacity · F2 equipment",fillcolor="#e3f6e8"]; time[label="domain/time.js\nHH:MM parse · overlap",fillcolor="#e3f6e8"];}
+ data[label="data/rooms.js\n5 rooms, deep-frozen, NOW",fillcolor="#eeeaf8"];
+ html->app; app->render; app->avail; app->filt; app->data; avail->time; }
